@@ -102,3 +102,6 @@ ENV/
 
 # Pycharm files
 .idea/
+
+# setting file
+settings.py
