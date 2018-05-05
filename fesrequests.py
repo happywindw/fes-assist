@@ -16,7 +16,7 @@ class FesRequest(object):
     def __init__(self, trans_code):
         self.trans_code = trans_code
 
-    def post(self):
+    def post(self, msg):
         pass
 
 
@@ -26,6 +26,6 @@ class FesB2301(FesRequest):
         self.check_date = check_date
         self.org_nick_name = org_nick_name
 
-    def post(self):
-        print('ss')
+    def post(self, msg):
+        print(msg)
         pass
