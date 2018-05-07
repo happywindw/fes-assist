@@ -20,9 +20,10 @@ class FesRequest(object):
         pass
 
 
+# 联机交易对账请求
 class FesB2301(FesRequest):
-    def __init__(self, trans_code, check_date, org_nick_name):
-        super().__init__(trans_code)
+    def __init__(self, check_date, org_nick_name):
+        super().__init__("2301")
         self.check_date = check_date
         self.org_nick_name = org_nick_name
 
