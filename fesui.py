@@ -39,10 +39,7 @@ class FesRootFrame(RootFrame):
 
     def on_top_button(self, event):
         tran_date = self.trans_date_picker.GetValue().Format('%Y%m%d')
-        tran_type = self.trans_choice_dict.get(self.trans_choice.GetCurrentSelection())
-        settle_type = tran_type[0]
-        org_nick_name = tran_type[1]
-        print(settle_type, org_nick_name, tran_date)
-        res = self.fb.check_account(tran_date, settle_type, org_nick_name)
+        choose_type = self.trans_choice_dict.get(self.trans_choice.GetCurrentSelection())
+        res = self.fb.check_account(tran_date, choose_type[0], choose_type[1])
 
 

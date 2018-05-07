@@ -10,6 +10,7 @@
 import wx
 import wx.xrc
 import wx.adv
+import wx.dataview
 
 
 ###########################################################################
@@ -33,6 +34,10 @@ class RootFrame(wx.Frame):
                                              0)
         self.top_static_text.Wrap(-1)
         inner_sizer.Add(self.top_static_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.top_static_line = wx.StaticLine(self.root_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
+                                             wx.LI_HORIZONTAL)
+        inner_sizer.Add(self.top_static_line, 0, wx.EXPAND | wx.ALL, 5)
 
         top_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -61,19 +66,34 @@ class RootFrame(wx.Frame):
 
         inner_sizer.Add(top_sizer, 1, wx.EXPAND, 5)
 
-        status_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.st_static_line = wx.StaticLine(self.root_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
+                                            wx.LI_HORIZONTAL)
+        inner_sizer.Add(self.st_static_line, 0, wx.EXPAND | wx.ALL, 5)
 
-        self.m_staticText4 = wx.StaticText(self.root_panel, wx.ID_ANY, u"MyLabel", wx.DefaultPosition, wx.DefaultSize,
-                                           0)
-        self.m_staticText4.Wrap(-1)
-        status_sizer.Add(self.m_staticText4, 0, wx.ALL, 5)
+        status_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_staticText5 = wx.StaticText(self.root_panel, wx.ID_ANY, u"MyLabel", wx.DefaultPosition, wx.DefaultSize,
-                                           0)
-        self.m_staticText5.Wrap(-1)
-        status_sizer.Add(self.m_staticText5, 0, wx.ALL, 5)
+        self.status_static_text = wx.StaticText(self.root_panel, wx.ID_ANY, u"无业务", wx.DefaultPosition, wx.DefaultSize,
+                                                0)
+        self.status_static_text.Wrap(-1)
+        status_sizer.Add(self.status_static_text, 0, wx.ALL, 5)
+
+        self.data_panel = wx.Panel(self.root_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
+        data_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        self.m_dataViewListCtrl2 = wx.dataview.DataViewListCtrl(self.data_panel, wx.ID_ANY, wx.DefaultPosition,
+                                                                wx.DefaultSize, 0)
+        data_sizer.Add(self.m_dataViewListCtrl2, 0, wx.ALL, 5)
+
+        self.data_panel.SetSizer(data_sizer)
+        self.data_panel.Layout()
+        data_sizer.Fit(self.data_panel)
+        status_sizer.Add(self.data_panel, 1, wx.EXPAND | wx.ALL, 5)
 
         inner_sizer.Add(status_sizer, 1, wx.EXPAND, 5)
+
+        self.op_static_line = wx.StaticLine(self.root_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
+                                            wx.LI_HORIZONTAL)
+        inner_sizer.Add(self.op_static_line, 0, wx.EXPAND | wx.ALL, 5)
 
         operate_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
