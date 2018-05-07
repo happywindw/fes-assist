@@ -61,6 +61,15 @@ class RootFrame(wx.Frame):
                                                        wx.DefaultPosition, wx.DefaultSize, wx.adv.DP_DEFAULT)
         top_sizer.Add(self.trans_date_picker, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
+        self.trans_amt_text = wx.StaticText(self.root_panel, wx.ID_ANY, u"总金额：", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.trans_amt_text.Wrap(-1)
+        top_sizer.Add(self.trans_amt_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.top_text_ctrl = wx.TextCtrl(self.root_panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition,
+                                         wx.Size(150, -1), 0)
+        self.top_text_ctrl.SetMaxLength(20)
+        top_sizer.Add(self.top_text_ctrl, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
         self.top_button = wx.Button(self.root_panel, wx.ID_ANY, u"OK", wx.DefaultPosition, wx.DefaultSize, 0)
         top_sizer.Add(self.top_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
