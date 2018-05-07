@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import wx
-from fesui import RootFrame
+from fesui import FesRootFrame
 
 app = wx.App()
-rf = RootFrame(None)
+rf = FesRootFrame(None)
 rf.Show()
 app.MainLoop()

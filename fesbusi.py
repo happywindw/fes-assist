@@ -7,13 +7,16 @@ class FesBusi(object):
         self.db = DataBaseApi()
 
     def check_account(self, tran_date, settle_type, org_nick_name):
-        res = self.db.account_check(tran_date, settle_type, 0, org_nick_name)
-        if res:  # 未对账
+        uncheck = self.db.account_check(tran_date, settle_type, 0, org_nick_name)
+        if uncheck:  # 未对账
+            print('未对账：', uncheck)
             pass
         else:
-            res = self.db.account_check(tran_date, settle_type, 1, org_nick_name)
-            if res:  # 已对账
+            check = self.db.account_check(tran_date, settle_type, 1, org_nick_name)
+            if check:  # 已对账
+                print('yi对账：', check)
                 pass
             else:    # 无业务
+                print('无业务')
                 pass
 
