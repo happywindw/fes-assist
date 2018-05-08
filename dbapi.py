@@ -18,21 +18,66 @@ class DataBaseApi(object):
         self.session = self.DBSession()
 
     def account_check(self, tran_date, settle_type, is_check, org_nick_name):
+        """
+        查询是否已对账及对账总金额、笔数
+        :param tran_date:
+        :param settle_type:
+        :param is_check:
+        :param org_nick_name:
+        :return:
+        """
         res = self.session.execute("select tran_date, count(1), sum(total_amt) from fes_online_detail where "
                                    "settle_type='%s' and tran_date='%s' and is_check='%s' and org_nick_name='%s' "
                                    "group by tran_date" % (settle_type, tran_date, is_check, org_nick_name))
         return res.fetchone()
 
+    def get_diff(self, tran_date, org_nick_name):
+        """
+        查询是否存在单边账
+        :param tran_date:
+        :param org_nick_name:
+        :return:
+        """
+        res = self.session.execute("select * from fes_check_file_diff t where t.org_nick_name='%s' and "
+                                   "t.check_date='%s'" % (org_nick_name, tran_date))
+        return res.fetchall()
+
     def get_settle_date(self, tran_date, settle_type, org_nick_name):
+        """
+        查询清算日期
+        :param tran_date:
+        :param settle_type:
+        :param org_nick_name:
+        :return:
+        """
         res = self.session.execute("select t.settle_date from fes_online_detail t where t.settle_type='%s' and "
                                    "t.tran_date='%s' and t.is_check='1' and org_nick_name='%s' and rownum<=1" %
                                    (settle_type, tran_date, org_nick_name))
         return res.fetchone()[0]
 
-    def settle_check(self):
-        pass
+    def settle_check(self, tran_date, settle_type, org_nick_name):
+        """
+        清算后查询资金流向状态
+        :param tran_date:
+        :param settle_type:
+        :param org_nick_name:
+        :return:
+        """
+        res = self.session.execute("select t.settle_type, t.is_confirmed, t.settle_status, t.settle_amt, "
+                                   "t.current_direction, t.current_fund_log_id, t.acct_a, t.* from fes_settle_log t "
+                                   "where  t.settle_log_id in (select settle_log_id from fes_online_detail where "
+                                   "settle_type='%s' and tran_date='%s' and  is_check='1' and "
+                                   "org_nick_name='%s')" % (settle_type, tran_date, org_nick_name))
+        return res.fetchall()
 
     def confirm_check(self, tran_date, settle_type, org_nick_name):
+        """
+        查询是否已经确认到账及到账详情
+        :param tran_date:
+        :param settle_type:
+        :param org_nick_name:
+        :return:
+        """
         res = self.session.execute("select t.tran_amt, t.status, t.is_check, t.* from fes_fund_log t where "
                                    "settle_log_id in (select settle_log_id from fes_settle_log  where settle_log_id "
                                    "in (select settle_log_id from fes_online_detail where settle_type='%s' and "
@@ -43,9 +88,3 @@ class DataBaseApi(object):
     def execute_sql(self, sql):
         return self.session.execute(sql)
 
-
-# test
-# dba = DataBaseApi()
-# rrr = dba.account_check('5', '20180416', '1', 'GHPOS')
-# for i in rrr:
-#     print(i)
