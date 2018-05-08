@@ -65,13 +65,13 @@ class RootFrame(wx.Frame):
         self.trans_amt_text.Wrap(-1)
         top_sizer.Add(self.trans_amt_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.top_text_ctrl = wx.TextCtrl(self.root_panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition,
+        self.amt_text_ctrl = wx.TextCtrl(self.root_panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition,
                                          wx.Size(150, -1), 0)
-        self.top_text_ctrl.SetMaxLength(20)
-        top_sizer.Add(self.top_text_ctrl, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.amt_text_ctrl.SetMaxLength(20)
+        top_sizer.Add(self.amt_text_ctrl, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.top_button = wx.Button(self.root_panel, wx.ID_ANY, u"OK", wx.DefaultPosition, wx.DefaultSize, 0)
-        top_sizer.Add(self.top_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.amt_button = wx.Button(self.root_panel, wx.ID_ANY, u"确认", wx.DefaultPosition, wx.DefaultSize, 0)
+        top_sizer.Add(self.amt_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
         inner_sizer.Add(top_sizer, 1, wx.EXPAND, 5)
 
@@ -106,14 +106,21 @@ class RootFrame(wx.Frame):
 
         operate_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.m_button2 = wx.Button(self.root_panel, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0)
-        operate_sizer.Add(self.m_button2, 0, wx.ALL, 5)
+        self.status_button = wx.Button(self.root_panel, wx.ID_ANY, u"OK", wx.DefaultPosition, wx.DefaultSize, 0)
+        operate_sizer.Add(self.status_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.m_button3 = wx.Button(self.root_panel, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0)
-        operate_sizer.Add(self.m_button3, 0, wx.ALL, 5)
+        self.m_staticline4 = wx.StaticLine(self.root_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
+                                           wx.LI_VERTICAL)
+        operate_sizer.Add(self.m_staticline4, 0, wx.EXPAND | wx.ALL, 5)
 
-        self.m_button4 = wx.Button(self.root_panel, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0)
-        operate_sizer.Add(self.m_button4, 0, wx.ALL, 5)
+        self.check_account_button = wx.Button(self.root_panel, wx.ID_ANY, u"对账", wx.DefaultPosition, wx.DefaultSize, 0)
+        operate_sizer.Add(self.check_account_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.settle_button = wx.Button(self.root_panel, wx.ID_ANY, u"清算", wx.DefaultPosition, wx.DefaultSize, 0)
+        operate_sizer.Add(self.settle_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.write_back_button = wx.Button(self.root_panel, wx.ID_ANY, u"回写", wx.DefaultPosition, wx.DefaultSize, 0)
+        operate_sizer.Add(self.write_back_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
         inner_sizer.Add(operate_sizer, 1, wx.EXPAND, 5)
 
@@ -129,7 +136,8 @@ class RootFrame(wx.Frame):
 
         # Connect Events
         self.trans_choice.Bind(wx.EVT_CHOICE, self.on_choose_tran_type)
-        self.top_button.Bind(wx.EVT_BUTTON, self.on_top_button)
+        self.amt_button.Bind(wx.EVT_BUTTON, self.on_amt_button)
+        self.status_button.Bind(wx.EVT_BUTTON, self.on_get_status)
 
     def __del__(self):
         pass
@@ -138,7 +146,10 @@ class RootFrame(wx.Frame):
     def on_choose_tran_type(self, event):
         event.Skip()
 
-    def on_top_button(self, event):
+    def on_amt_button(self, event):
+        event.Skip()
+
+    def on_get_status(self, event):
         event.Skip()
 
 
