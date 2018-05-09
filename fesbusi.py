@@ -13,13 +13,13 @@ class FesBusi(object):
             return {'no_business': ()}
         if not is_check:
             return {'uncheck', (check_info[0], float(check_info[1]))}
-        status_dict['is_check'] = (check_info[0], float(check_info[1]))
+        status_dict['checked'] = (check_info[0], float(check_info[1]))
 
         is_settle, settle_info = self.check_settle(tran_date, settle_type, org_nick_name)
         if not is_settle:
             status_dict['unsettle'] = settle_info
         else:
-            status_dict['is_settle'] = settle_info
+            status_dict['settled'] = settle_info
 
         is_confirm, confirm_info = self.check_confirm(tran_date, settle_type, org_nick_name)
         if not is_confirm:

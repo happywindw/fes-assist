@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import wx
 from fbui.rootframe import RootFrame
 from fesbusi import FesBusi
 
@@ -57,6 +58,12 @@ class FesRootFrame(RootFrame):
             self.top_amt_text.SetForegroundColour((255, 0, 0))
 
     def on_get_status(self, event):
+        if not self.total_amt:
+            wx.MessageBox('未设置交易总金额！')
+            return
+        elif not self.settle_type:
+            wx.MessageBox('未选择交易类型！')
+            return
         status = self.fb.check_status(self.tran_date, self.settle_type, self.org_nick_name, self.total_amt)
         print(status)
 
