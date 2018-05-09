@@ -10,7 +10,6 @@
 import wx
 import wx.xrc
 import wx.adv
-import wx.dataview
 
 
 ###########################################################################
@@ -30,8 +29,7 @@ class RootFrame(wx.Frame):
         self.root_panel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.NO_BORDER | wx.TAB_TRAVERSAL)
         inner_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.top_trans_text = wx.StaticText(self.root_panel, wx.ID_ANY, u"未选择交易类型", wx.DefaultPosition, wx.DefaultSize,
-                                            0)
+        self.top_trans_text = wx.StaticText(self.root_panel, wx.ID_ANY, u"fes", wx.DefaultPosition, wx.DefaultSize, 0)
         self.top_trans_text.Wrap(-1)
         self.top_trans_text.SetFont(
             wx.Font(15, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑"))
@@ -81,43 +79,64 @@ class RootFrame(wx.Frame):
 
         inner_sizer.Add(config_sizer, 1, wx.ALL | wx.EXPAND, 10)
 
-        status_sizer = wx.BoxSizer(wx.VERTICAL)
+        status_sizer = wx.StaticBoxSizer(wx.StaticBox(self.root_panel, wx.ID_ANY, u"状态"), wx.VERTICAL)
 
-        self.status_static_text = wx.StaticText(self.root_panel, wx.ID_ANY, u"无业务", wx.DefaultPosition, wx.DefaultSize,
-                                                0)
-        self.status_static_text.Wrap(-1)
-        status_sizer.Add(self.status_static_text, 0, wx.ALL, 5)
+        ca_sizer = wx.WrapSizer(wx.HORIZONTAL)
 
-        self.data_panel = wx.Panel(self.root_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
-        data_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.ca_static_text = wx.StaticText(status_sizer.GetStaticBox(), wx.ID_ANY, u"未对账", wx.DefaultPosition,
+                                            wx.DefaultSize, 0)
+        self.ca_static_text.Wrap(-1)
+        self.ca_static_text.SetFont(
+            wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑"))
 
-        self.m_dataViewListCtrl2 = wx.dataview.DataViewListCtrl(self.data_panel, wx.ID_ANY, wx.DefaultPosition,
-                                                                wx.DefaultSize, 0)
-        data_sizer.Add(self.m_dataViewListCtrl2, 0, wx.ALL, 5)
+        ca_sizer.Add(self.ca_static_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.data_panel.SetSizer(data_sizer)
-        self.data_panel.Layout()
-        data_sizer.Fit(self.data_panel)
-        status_sizer.Add(self.data_panel, 1, wx.EXPAND | wx.ALL, 5)
+        self.ca_button = wx.Button(status_sizer.GetStaticBox(), wx.ID_ANY, u"对账", wx.DefaultPosition, wx.DefaultSize, 0)
+        ca_sizer.Add(self.ca_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        inner_sizer.Add(status_sizer, 1, wx.EXPAND, 5)
+        status_sizer.Add(ca_sizer, 1, wx.EXPAND, 5)
 
-        self.op_static_line = wx.StaticLine(self.root_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
+        self.ca_static_line = wx.StaticLine(status_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
                                             wx.LI_HORIZONTAL)
-        inner_sizer.Add(self.op_static_line, 0, wx.EXPAND | wx.ALL, 5)
+        status_sizer.Add(self.ca_static_line, 0, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
 
-        operate_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        cs_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.check_account_button = wx.Button(self.root_panel, wx.ID_ANY, u"对账", wx.DefaultPosition, wx.DefaultSize, 0)
-        operate_sizer.Add(self.check_account_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.cs_static_text = wx.StaticText(status_sizer.GetStaticBox(), wx.ID_ANY, u"未清算", wx.DefaultPosition,
+                                            wx.DefaultSize, 0)
+        self.cs_static_text.Wrap(-1)
+        self.cs_static_text.SetFont(
+            wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑"))
 
-        self.settle_button = wx.Button(self.root_panel, wx.ID_ANY, u"清算", wx.DefaultPosition, wx.DefaultSize, 0)
-        operate_sizer.Add(self.settle_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        cs_sizer.Add(self.cs_static_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.write_back_button = wx.Button(self.root_panel, wx.ID_ANY, u"回写", wx.DefaultPosition, wx.DefaultSize, 0)
-        operate_sizer.Add(self.write_back_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.settle_button = wx.Button(status_sizer.GetStaticBox(), wx.ID_ANY, u"清算", wx.DefaultPosition,
+                                       wx.DefaultSize, 0)
+        cs_sizer.Add(self.settle_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        inner_sizer.Add(operate_sizer, 1, wx.EXPAND, 5)
+        status_sizer.Add(cs_sizer, 1, wx.EXPAND, 5)
+
+        self.cs_static_line = wx.StaticLine(status_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
+                                            wx.LI_HORIZONTAL)
+        status_sizer.Add(self.cs_static_line, 0, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
+
+        cc_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.cc_static_text = wx.StaticText(status_sizer.GetStaticBox(), wx.ID_ANY, u"未到账", wx.DefaultPosition,
+                                            wx.DefaultSize, 0)
+        self.cc_static_text.Wrap(-1)
+        self.cc_static_text.SetFont(
+            wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑"))
+
+        cc_sizer.Add(self.cc_static_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.settle_button1 = wx.Button(status_sizer.GetStaticBox(), wx.ID_ANY, u"回写", wx.DefaultPosition,
+                                        wx.DefaultSize, 0)
+        cc_sizer.Add(self.settle_button1, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        status_sizer.Add(cc_sizer, 1, wx.EXPAND, 5)
+
+        inner_sizer.Add(status_sizer, 1, wx.ALL | wx.EXPAND, 5)
 
         self.root_panel.SetSizer(inner_sizer)
         self.root_panel.Layout()

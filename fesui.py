@@ -53,6 +53,9 @@ class FesRootFrame(RootFrame):
             self.amt_text_ctrl.Clear()
             self.amt_text_ctrl.SetFocus()
             return
-        status = self.fb.check_status(self.tran_date, self.settle_type, self.org_nick_name, self.total_amt)
-        print(status)
+        status_dict = self.fb.check_status(self.tran_date, self.settle_type, self.org_nick_name, self.total_amt)
+        self.show_status(status_dict)
+
+    def show_status(self, status_dict):
+        print(status_dict)
 
