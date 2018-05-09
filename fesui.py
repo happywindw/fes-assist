@@ -10,33 +10,37 @@ class FesRootFrame(RootFrame):
         self.fb = FesBusi()
 
         self.trans_choice_dict = {
-            0: (),
-            1: ('5', 'GHPOS', '工商银行大厅POS'),
-            2: ('6', 'GHIMAC', '工商银行一体机IMAC'),
-            3: ('8', 'GHAPP', '工商银行APP'),
-            4: ('5', 'ZHPOS', '招商银行大厅POS'),
-            5: ('8', 'CCBAPP', '建设银行APP')
+            0: ('', ''),
+            1: ('5', 'GHPOS'),
+            2: ('6', 'GHIMAC'),
+            3: ('8', 'GHAPP'),
+            4: ('5', 'ZHPOS'),
+            5: ('8', 'CCBAPP')
         }
         self.total_amt = 0.0
         self.tran_date = self.trans_date_picker.GetValue().Format('%Y-%m-%d')
         self.settle_type = ''
         self.org_nick_name = ''
-        self.init_widgets()
 
-    def init_widgets(self):
+        self.is_check = False
+        self.is_settle = False
+        self.is_confirm = False
+
         self.top_trans_text.SetLabel('FES')
         self.top_trans_text.SetForegroundColour((0, 0, 255))
+        self.disable_status()
 
     def on_choose_tran_type(self, event):
-        choice_num = self.trans_choice.GetCurrentSelection()
-        if choice_num == 0:
-            self.settle_type, self.org_nick_name = ('', '')
-            return
-        else:
-            self.settle_type, self.org_nick_name, choice_type = self.trans_choice_dict.get(choice_num)
+        s, o = self.trans_choice_dict.get(self.trans_choice.GetCurrentSelection())
+        if self.settle_type != s:
+            self.settle_type, self.org_nick_name = s, o
+            self.disable_status()
 
     def on_change_date(self, event):
-        self.tran_date = self.trans_date_picker.GetValue().Format('%Y%m%d')
+        td = self.trans_date_picker.GetValue().Format('%Y%m%d')
+        if self.tran_date != td:
+            self.tran_date = td
+            self.disable_status()
 
     def on_get_status(self, event):
         if not self.settle_type:
@@ -56,6 +60,52 @@ class FesRootFrame(RootFrame):
         status_dict = self.fb.check_status(self.tran_date, self.settle_type, self.org_nick_name, self.total_amt)
         self.show_status(status_dict)
 
+    def disable_status(self):
+        self.ca_static_text.SetLabel('未对账')
+        self.ca_static_text.Disable()
+        self.ca_button.Disable()
+        self.cs_static_text.SetLabel('未清算')
+        self.cs_static_text.Disable()
+        self.cs_button.Disable()
+        self.cc_static_text.SetLabel('未到账')
+        self.cc_static_text.Disable()
+        self.cc_button.Disable()
+
     def show_status(self, status_dict):
         print(status_dict)
+        self.ca_static_text.Enable()
+        if status_dict.get('no_business'):
+            self.ca_static_text.SetLabel('无业务')
+            self.ca_static_text.SetForegroundColour((0, 0, 255))
+            self.ca_button.Disable()
+        elif status_dict.get('unchecked'):
+            self.ca_static_text.SetLabel('未对账')
+            self.ca_static_text.SetForegroundColour((255, 0, 0))
+            self.ca_button.Enable()
+        elif status_dict.get('checked'):
+            self.ca_static_text.SetLabel('已对账')
+            self.ca_static_text.SetForegroundColour((0, 255, 0))
+            self.ca_button.Disable()
+
+        if status_dict.get('unsettled'):
+            self.cs_static_text.Enable()
+            self.cs_static_text.SetLabel('未清算')
+            self.cs_static_text.SetForegroundColour((255, 0, 0))
+            self.cs_button.Enable()
+        elif status_dict.get('settled'):
+            self.cs_static_text.Enable()
+            self.cs_static_text.SetLabel('已清算')
+            self.cs_static_text.SetForegroundColour((0, 255, 0))
+            self.cs_button.Disable()
+
+        if status_dict.get('unconfirmed'):
+            self.cc_static_text.Enable()
+            self.cc_static_text.SetLabel('未到账')
+            self.cc_static_text.SetForegroundColour((255, 0, 0))
+            self.cc_button.Disable()
+        elif status_dict.get('confirmed'):
+            self.cc_static_text.Enable()
+            self.cc_static_text.SetLabel('已到账')
+            self.cc_static_text.SetForegroundColour((0, 255, 0))
+            self.cc_button.Disable()
 

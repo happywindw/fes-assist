@@ -110,9 +110,8 @@ class RootFrame(wx.Frame):
 
         cs_sizer.Add(self.cs_static_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.settle_button = wx.Button(status_sizer.GetStaticBox(), wx.ID_ANY, u"清算", wx.DefaultPosition,
-                                       wx.DefaultSize, 0)
-        cs_sizer.Add(self.settle_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.cs_button = wx.Button(status_sizer.GetStaticBox(), wx.ID_ANY, u"清算", wx.DefaultPosition, wx.DefaultSize, 0)
+        cs_sizer.Add(self.cs_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
         status_sizer.Add(cs_sizer, 1, wx.EXPAND, 5)
 
@@ -130,9 +129,8 @@ class RootFrame(wx.Frame):
 
         cc_sizer.Add(self.cc_static_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.settle_button1 = wx.Button(status_sizer.GetStaticBox(), wx.ID_ANY, u"回写", wx.DefaultPosition,
-                                        wx.DefaultSize, 0)
-        cc_sizer.Add(self.settle_button1, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.cc_button = wx.Button(status_sizer.GetStaticBox(), wx.ID_ANY, u"回写", wx.DefaultPosition, wx.DefaultSize, 0)
+        cc_sizer.Add(self.cc_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
         status_sizer.Add(cc_sizer, 1, wx.EXPAND, 5)
 

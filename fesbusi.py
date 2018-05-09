@@ -10,7 +10,7 @@ class FesBusi(object):
         status_dict = {}
         is_check, check_info = self.check_account(tran_date, settle_type, org_nick_name)
         if not is_check and not check_info:
-            return {'no_business': ()}
+            return {'no_business': -1}
         if not is_check:
             return {'uncheck', (check_info[0], float(check_info[1]))}
         status_dict['checked'] = (check_info[0], float(check_info[1]))
