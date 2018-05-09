@@ -57,7 +57,6 @@ class FesRootFrame(RootFrame):
             self.top_amt_text.SetForegroundColour((255, 0, 0))
 
     def on_get_status(self, event):
-        status = self.fb.check_account(self.tran_date, self.settle_type, self.org_nick_name)
+        status = self.fb.check_status(self.tran_date, self.settle_type, self.org_nick_name, self.total_amt)
         print(status)
-
 
