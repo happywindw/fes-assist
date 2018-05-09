@@ -21,7 +21,7 @@ class RootFrame(wx.Frame):
 
     def __init__(self, parent):
         wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=u"FES ASSIST", pos=wx.DefaultPosition,
-                          size=wx.Size(800, 600), style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
+                          size=wx.Size(1000, 600), style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
 
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
 
@@ -30,76 +30,56 @@ class RootFrame(wx.Frame):
         self.root_panel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.NO_BORDER | wx.TAB_TRAVERSAL)
         inner_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        top_sizer = wx.GridSizer(1, 3, 0, 0)
-
         self.top_trans_text = wx.StaticText(self.root_panel, wx.ID_ANY, u"未选择交易类型", wx.DefaultPosition, wx.DefaultSize,
                                             0)
         self.top_trans_text.Wrap(-1)
         self.top_trans_text.SetFont(
             wx.Font(15, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑"))
 
-        top_sizer.Add(self.top_trans_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        inner_sizer.Add(self.top_trans_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.top_date_text = wx.StaticText(self.root_panel, wx.ID_ANY, u"未选择交易类型", wx.DefaultPosition, wx.DefaultSize,
-                                           0)
-        self.top_date_text.Wrap(-1)
-        self.top_date_text.SetFont(
-            wx.Font(15, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑"))
+        config_sizer = wx.StaticBoxSizer(wx.StaticBox(self.root_panel, wx.ID_ANY, u"设置"), wx.HORIZONTAL)
 
-        top_sizer.Add(self.top_date_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-
-        self.top_amt_text = wx.StaticText(self.root_panel, wx.ID_ANY, u"未选择交易类型", wx.DefaultPosition, wx.DefaultSize, 0)
-        self.top_amt_text.Wrap(-1)
-        self.top_amt_text.SetFont(
-            wx.Font(15, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑"))
-
-        top_sizer.Add(self.top_amt_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-
-        inner_sizer.Add(top_sizer, 1, wx.EXPAND, 5)
-
-        self.top_static_line = wx.StaticLine(self.root_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
-                                             wx.LI_HORIZONTAL)
-        inner_sizer.Add(self.top_static_line, 0, wx.EXPAND | wx.ALL, 5)
-
-        choose_sizer = wx.BoxSizer(wx.HORIZONTAL)
-
-        self.trans_choice_text = wx.StaticText(self.root_panel, wx.ID_ANY, u"选择交易类型：", wx.DefaultPosition,
+        self.trans_choice_text = wx.StaticText(config_sizer.GetStaticBox(), wx.ID_ANY, u"选择交易类型：", wx.DefaultPosition,
                                                wx.DefaultSize, 0)
         self.trans_choice_text.Wrap(-1)
-        choose_sizer.Add(self.trans_choice_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        config_sizer.Add(self.trans_choice_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
         trans_choiceChoices = [u"未选择", u"工商银行大厅POS", u"工商银行一体机IMAC", u"工商银行APP", u"招商银行大厅POS", u"建设银行APP"]
-        self.trans_choice = wx.Choice(self.root_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
+        self.trans_choice = wx.Choice(config_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
                                       trans_choiceChoices, 0)
         self.trans_choice.SetSelection(0)
-        choose_sizer.Add(self.trans_choice, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        config_sizer.Add(self.trans_choice, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.trans_date_text = wx.StaticText(self.root_panel, wx.ID_ANY, u"选择交易日期：", wx.DefaultPosition, wx.DefaultSize,
-                                             0)
+        self.trans_date_text = wx.StaticText(config_sizer.GetStaticBox(), wx.ID_ANY, u"          选择交易日期：",
+                                             wx.DefaultPosition, wx.DefaultSize, 0)
         self.trans_date_text.Wrap(-1)
-        choose_sizer.Add(self.trans_date_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        config_sizer.Add(self.trans_date_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.trans_date_picker = wx.adv.DatePickerCtrl(self.root_panel, wx.ID_ANY, wx.DefaultDateTime,
+        self.trans_date_picker = wx.adv.DatePickerCtrl(config_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultDateTime,
                                                        wx.DefaultPosition, wx.DefaultSize, wx.adv.DP_DEFAULT)
-        choose_sizer.Add(self.trans_date_picker, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        config_sizer.Add(self.trans_date_picker, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.trans_amt_text = wx.StaticText(self.root_panel, wx.ID_ANY, u"总金额：", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.trans_amt_text = wx.StaticText(config_sizer.GetStaticBox(), wx.ID_ANY, u"          总金额：",
+                                            wx.DefaultPosition, wx.DefaultSize, 0)
         self.trans_amt_text.Wrap(-1)
-        choose_sizer.Add(self.trans_amt_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        config_sizer.Add(self.trans_amt_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.amt_text_ctrl = wx.TextCtrl(self.root_panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition,
+        self.amt_text_ctrl = wx.TextCtrl(config_sizer.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition,
                                          wx.Size(150, -1), 0)
         self.amt_text_ctrl.SetMaxLength(20)
-        choose_sizer.Add(self.amt_text_ctrl, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        config_sizer.Add(self.amt_text_ctrl, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.amt_button = wx.Button(self.root_panel, wx.ID_ANY, u"确认", wx.DefaultPosition, wx.DefaultSize, 0)
-        choose_sizer.Add(self.amt_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.blank_static_text = wx.StaticText(config_sizer.GetStaticBox(), wx.ID_ANY, u"          ",
+                                               wx.DefaultPosition, wx.DefaultSize, 0)
+        self.blank_static_text.Wrap(-1)
+        config_sizer.Add(self.blank_static_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        inner_sizer.Add(choose_sizer, 1, wx.EXPAND, 5)
+        self.status_button = wx.Button(config_sizer.GetStaticBox(), wx.ID_ANY, u"查询状态", wx.DefaultPosition,
+                                       wx.DefaultSize, 0)
+        config_sizer.Add(self.status_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.st_static_line = wx.StaticLine(self.root_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
-                                            wx.LI_HORIZONTAL)
-        inner_sizer.Add(self.st_static_line, 0, wx.EXPAND | wx.ALL, 5)
+        inner_sizer.Add(config_sizer, 1, wx.ALL | wx.EXPAND, 10)
 
         status_sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -128,13 +108,6 @@ class RootFrame(wx.Frame):
 
         operate_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.status_button = wx.Button(self.root_panel, wx.ID_ANY, u"OK", wx.DefaultPosition, wx.DefaultSize, 0)
-        operate_sizer.Add(self.status_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-
-        self.m_staticline4 = wx.StaticLine(self.root_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
-                                           wx.LI_VERTICAL)
-        operate_sizer.Add(self.m_staticline4, 0, wx.EXPAND | wx.ALL, 5)
-
         self.check_account_button = wx.Button(self.root_panel, wx.ID_ANY, u"对账", wx.DefaultPosition, wx.DefaultSize, 0)
         operate_sizer.Add(self.check_account_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
@@ -159,7 +132,6 @@ class RootFrame(wx.Frame):
         # Connect Events
         self.trans_choice.Bind(wx.EVT_CHOICE, self.on_choose_tran_type)
         self.trans_date_picker.Bind(wx.adv.EVT_DATE_CHANGED, self.on_change_date)
-        self.amt_button.Bind(wx.EVT_BUTTON, self.on_amt_button)
         self.status_button.Bind(wx.EVT_BUTTON, self.on_get_status)
 
     def __del__(self):
@@ -170,9 +142,6 @@ class RootFrame(wx.Frame):
         event.Skip()
 
     def on_change_date(self, event):
-        event.Skip()
-
-    def on_amt_button(self, event):
         event.Skip()
 
     def on_get_status(self, event):

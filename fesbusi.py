@@ -18,6 +18,7 @@ class FesBusi(object):
         is_settle, settle_info = self.check_settle(tran_date, settle_type, org_nick_name)
         if not is_settle:
             status_dict['unsettle'] = settle_info
+            return status_dict
         else:
             status_dict['settled'] = settle_info
 
