@@ -6,6 +6,9 @@ class FesBusi(object):
     def __init__(self):
         self.db = DataBaseApi()
 
+    def check_status(self, tran_date, settle_type, org_nick_name, total_amt):
+        pass
+
     def check_account(self, tran_date, settle_type, org_nick_name):
         is_check = self.db.account_check(tran_date, settle_type, 1, org_nick_name)
         if not is_check:
