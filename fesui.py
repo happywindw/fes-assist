@@ -32,7 +32,7 @@ class FesRootFrame(RootFrame):
 
     def on_choose_tran_type(self, event):
         s, o = self.trans_choice_dict.get(self.trans_choice.GetCurrentSelection())
-        if self.settle_type != s:
+        if self.settle_type != s or self.org_nick_name != o:
             self.settle_type, self.org_nick_name = s, o
             self.disable_status()
 
@@ -73,16 +73,18 @@ class FesRootFrame(RootFrame):
 
     def show_status(self, status_dict):
         print(status_dict)
-        self.ca_static_text.Enable()
         if status_dict.get('no_business'):
+            self.ca_static_text.Enable()
             self.ca_static_text.SetLabel('无业务')
             self.ca_static_text.SetForegroundColour((0, 0, 255))
             self.ca_button.Disable()
         elif status_dict.get('unchecked'):
+            self.ca_static_text.Enable()
             self.ca_static_text.SetLabel('未对账')
             self.ca_static_text.SetForegroundColour((255, 0, 0))
             self.ca_button.Enable()
         elif status_dict.get('checked'):
+            self.ca_static_text.Enable()
             self.ca_static_text.SetLabel('已对账')
             self.ca_static_text.SetForegroundColour((0, 255, 0))
             self.ca_button.Disable()
@@ -109,3 +111,11 @@ class FesRootFrame(RootFrame):
             self.cc_static_text.SetForegroundColour((0, 255, 0))
             self.cc_button.Disable()
 
+    def on_ca_button(self, event):
+        self.fb.post_check_account(self.tran_date, self.org_nick_name)
+
+    def on_cs_button(self, event):
+        self.fb.post_check_settle(self.tran_date, self.settle_type, self.org_nick_name)
+
+    def on_cc_button(self, event):
+        event.Skip()

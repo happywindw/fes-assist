@@ -31,6 +31,37 @@ class DataBaseApi(object):
                                    % (settle_type, tran_date, is_check, org_nick_name))
         return res.fetchone()
 
+    def get_repeat_aae076(self, tran_date, settle_type, org_nick_name):
+        """
+        查询重复的aae076
+        :param tran_date:
+        :param settle_type:
+        :param org_nick_name:
+        :return:
+        """
+        res = self.session.execute("select aae076,count(1) from fes_online_detail where settle_type='%s' and "
+                                   "tran_date='%s' and is_check='0' and org_nick_name='%s' group by aae076 "
+                                   "having count(1)>1" % (settle_type, tran_date, org_nick_name))
+        return res.fetchall()
+
+    def delete_repeat_aae076(self, aae076):
+        """
+        删除重复的aae076记录
+        :param aae076:
+        :return:
+        """
+        repeats = self.session.execute("select id, settle_code from fes_online_detail t where aae076='%s'"
+                                       % aae076).fetchall()
+        if len(repeats) <= 1:
+            return
+        else:
+            delete_id = repeats[0][0]
+            for record in repeats:
+                if record[0] > delete_id:
+                    delete_id = record[0]
+            self.session.execute("delete from fes_online_detail where id='%s'" % delete_id)
+            self.session.commit()
+
     def get_diff(self, tran_date, org_nick_name):
         """
         查询是否存在单边账

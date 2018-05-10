@@ -68,7 +68,7 @@ class RootFrame(wx.Frame):
         self.amt_text_ctrl.SetMaxLength(20)
         config_sizer.Add(self.amt_text_ctrl, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.blank_static_text = wx.StaticText(config_sizer.GetStaticBox(), wx.ID_ANY, u"          ",
+        self.blank_static_text = wx.StaticText(config_sizer.GetStaticBox(), wx.ID_ANY, wx.EmptyString,
                                                wx.DefaultPosition, wx.DefaultSize, 0)
         self.blank_static_text.Wrap(-1)
         config_sizer.Add(self.blank_static_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
@@ -150,6 +150,9 @@ class RootFrame(wx.Frame):
         self.trans_choice.Bind(wx.EVT_CHOICE, self.on_choose_tran_type)
         self.trans_date_picker.Bind(wx.adv.EVT_DATE_CHANGED, self.on_change_date)
         self.status_button.Bind(wx.EVT_BUTTON, self.on_get_status)
+        self.ca_button.Bind(wx.EVT_BUTTON, self.on_ca_button)
+        self.cs_button.Bind(wx.EVT_BUTTON, self.on_cs_button)
+        self.cc_button.Bind(wx.EVT_BUTTON, self.on_cc_button)
 
     def __del__(self):
         pass
@@ -162,6 +165,15 @@ class RootFrame(wx.Frame):
         event.Skip()
 
     def on_get_status(self, event):
+        event.Skip()
+
+    def on_ca_button(self, event):
+        event.Skip()
+
+    def on_cs_button(self, event):
+        event.Skip()
+
+    def on_cc_button(self, event):
         event.Skip()
 
 
