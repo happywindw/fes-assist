@@ -64,9 +64,12 @@ class FesRootFrame(RootFrame):
         self.ca_static_text.SetLabel('未对账')
         self.ca_static_text.Disable()
         self.ca_button.Disable()
+        self.ca_grid.ClearGrid()
+
         self.cs_static_text.SetLabel('未清算')
         self.cs_static_text.Disable()
         self.cs_button.Disable()
+
         self.cc_static_text.SetLabel('未到账')
         self.cc_static_text.Disable()
         self.cc_button.Disable()
@@ -83,11 +86,15 @@ class FesRootFrame(RootFrame):
             self.ca_static_text.SetLabel('未对账')
             self.ca_static_text.SetForegroundColour((255, 0, 0))
             self.ca_button.Enable()
+            self.ca_grid.SetCellValue(0, 0, str(status_dict.get('unchecked')[0]))
+            self.ca_grid.SetCellValue(0, 1, str(status_dict.get('unchecked')[1]))
         elif status_dict.get('checked'):
             self.ca_static_text.Enable()
             self.ca_static_text.SetLabel('已对账')
             self.ca_static_text.SetForegroundColour((0, 255, 0))
             self.ca_button.Disable()
+            self.ca_grid.SetCellValue(0, 0, str(status_dict.get('checked')[0]))
+            self.ca_grid.SetCellValue(0, 1, str(status_dict.get('checked')[1]))
 
         if status_dict.get('unsettled'):
             self.cs_static_text.Enable()

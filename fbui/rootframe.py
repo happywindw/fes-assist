@@ -10,6 +10,7 @@
 import wx
 import wx.xrc
 import wx.adv
+import wx.grid
 
 
 ###########################################################################
@@ -93,6 +94,32 @@ class RootFrame(wx.Frame):
 
         self.ca_button = wx.Button(status_sizer.GetStaticBox(), wx.ID_ANY, u"对账", wx.DefaultPosition, wx.DefaultSize, 0)
         ca_sizer.Add(self.ca_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.ca_grid = wx.grid.Grid(status_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
+
+        # Grid
+        self.ca_grid.CreateGrid(1, 2)
+        self.ca_grid.EnableEditing(True)
+        self.ca_grid.EnableGridLines(True)
+        self.ca_grid.EnableDragGridSize(False)
+        self.ca_grid.SetMargins(0, 0)
+
+        # Columns
+        self.ca_grid.EnableDragColMove(False)
+        self.ca_grid.EnableDragColSize(True)
+        self.ca_grid.SetColLabelSize(30)
+        self.ca_grid.SetColLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
+
+        # Rows
+        self.ca_grid.EnableDragRowSize(True)
+        self.ca_grid.SetRowLabelSize(80)
+        self.ca_grid.SetRowLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
+
+        # Label Appearance
+
+        # Cell Defaults
+        self.ca_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
+        ca_sizer.Add(self.ca_grid, 0, wx.ALL, 5)
 
         status_sizer.Add(ca_sizer, 1, wx.EXPAND, 5)
 
