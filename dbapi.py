@@ -94,10 +94,10 @@ class DataBaseApi(object):
         :param org_nick_name:
         :return:
         """
-        res = self.session.execute("select t.is_confirmed, t.settle_status, t.settle_amt, t.current_direction, "
-                                   "t.current_fund_log_id, t.acct_a from fes_settle_log t where  t.settle_log_id in "
-                                   "(select settle_log_id from fes_online_detail where settle_type='%s' and "
-                                   "tran_date='%s' and  is_check='1' and org_nick_name='%s')"
+        res = self.session.execute("select t.settle_amt, t.is_confirmed, t.settle_status, t.current_direction, "
+                                   "t.current_fund_log_id, t.acct_a, t.settle_log_id from fes_settle_log t where  "
+                                   "t.settle_log_id in (select settle_log_id from fes_online_detail where "
+                                   "settle_type='%s' and tran_date='%s' and  is_check='1' and org_nick_name='%s')"
                                    % (settle_type, tran_date, org_nick_name))
         return res.fetchall()
 
@@ -109,11 +109,11 @@ class DataBaseApi(object):
         :param org_nick_name:
         :return:
         """
-        res = self.session.execute("select t.tran_amt, t.status, t.is_check, t.* from fes_fund_log t where "
-                                   "settle_log_id in (select settle_log_id from fes_settle_log  where settle_log_id "
-                                   "in (select settle_log_id from fes_online_detail where settle_type='%s' and "
-                                   "tran_date='%s' and is_check='1' and org_nick_name='%s'))" %
-                                   (settle_type, tran_date, org_nick_name))
+        res = self.session.execute("select t.tran_amt, t.status, t.is_check, t.current_direction, t.fund_seq_no, "
+                                   "t.in_acct_no, t.settle_log_id from fes_fund_log t where settle_log_id in (select "
+                                   "settle_log_id from fes_settle_log  where settle_log_id in (select settle_log_id "
+                                   "from fes_online_detail where settle_type='%s' and tran_date='%s' and is_check='1' "
+                                   "and org_nick_name='%s'))" % (settle_type, tran_date, org_nick_name))
         return res.fetchall()
 
     def execute_sql(self, sql):

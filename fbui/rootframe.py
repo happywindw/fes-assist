@@ -108,6 +108,8 @@ class RootFrame(wx.Frame):
         self.ca_grid.EnableDragColMove(False)
         self.ca_grid.EnableDragColSize(True)
         self.ca_grid.SetColLabelSize(30)
+        self.ca_grid.SetColLabelValue(0, u"笔数")
+        self.ca_grid.SetColLabelValue(1, u"金额")
         self.ca_grid.SetColLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
 
         # Rows
@@ -140,6 +142,41 @@ class RootFrame(wx.Frame):
         self.cs_button = wx.Button(status_sizer.GetStaticBox(), wx.ID_ANY, u"清算", wx.DefaultPosition, wx.DefaultSize, 0)
         cs_sizer.Add(self.cs_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
+        self.cs_grid = wx.grid.Grid(status_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
+
+        # Grid
+        self.cs_grid.CreateGrid(1, 7)
+        self.cs_grid.EnableEditing(True)
+        self.cs_grid.EnableGridLines(True)
+        self.cs_grid.EnableDragGridSize(False)
+        self.cs_grid.SetMargins(0, 0)
+
+        # Columns
+        self.cs_grid.EnableDragColMove(False)
+        self.cs_grid.EnableDragColSize(True)
+        self.cs_grid.SetColLabelSize(30)
+        self.cs_grid.SetColLabelValue(0, u"SETTLE_AMT")
+        self.cs_grid.SetColLabelValue(1, u"IS_CONFIRMED")
+        self.cs_grid.SetColLabelValue(2, u"SETTLE_STATUS")
+        self.cs_grid.SetColLabelValue(3, u"CURRENT_DIRECTION")
+        self.cs_grid.SetColLabelValue(4, u"CURRENT_FUND_LOG_ID")
+        self.cs_grid.SetColLabelValue(5, u"ACCT_A")
+        self.cs_grid.SetColLabelValue(6, u"SETTLE_LOG_ID")
+        self.cs_grid.SetColLabelValue(7, u"CURRENT_DIRECTION")
+        self.cs_grid.SetColLabelValue(8, u"CURRENT")
+        self.cs_grid.SetColLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
+
+        # Rows
+        self.cs_grid.EnableDragRowSize(True)
+        self.cs_grid.SetRowLabelSize(80)
+        self.cs_grid.SetRowLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
+
+        # Label Appearance
+
+        # Cell Defaults
+        self.cs_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
+        cs_sizer.Add(self.cs_grid, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
         status_sizer.Add(cs_sizer, 1, wx.EXPAND, 5)
 
         self.cs_static_line = wx.StaticLine(status_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
@@ -158,6 +195,39 @@ class RootFrame(wx.Frame):
 
         self.cc_button = wx.Button(status_sizer.GetStaticBox(), wx.ID_ANY, u"回写", wx.DefaultPosition, wx.DefaultSize, 0)
         cc_sizer.Add(self.cc_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.cc_grid = wx.grid.Grid(status_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
+
+        # Grid
+        self.cc_grid.CreateGrid(1, 7)
+        self.cc_grid.EnableEditing(True)
+        self.cc_grid.EnableGridLines(True)
+        self.cc_grid.EnableDragGridSize(False)
+        self.cc_grid.SetMargins(0, 0)
+
+        # Columns
+        self.cc_grid.EnableDragColMove(False)
+        self.cc_grid.EnableDragColSize(True)
+        self.cc_grid.SetColLabelSize(30)
+        self.cc_grid.SetColLabelValue(0, u"TRAN_AMT")
+        self.cc_grid.SetColLabelValue(1, u"STATUS")
+        self.cc_grid.SetColLabelValue(2, u"IS_CHECK")
+        self.cc_grid.SetColLabelValue(3, u"CURRENT_DIRECTION")
+        self.cc_grid.SetColLabelValue(4, u"FUND_SEQ_NO")
+        self.cc_grid.SetColLabelValue(5, u"IN_ACCT_NO")
+        self.cc_grid.SetColLabelValue(6, u"SETTLE_LOG_ID")
+        self.cc_grid.SetColLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
+
+        # Rows
+        self.cc_grid.EnableDragRowSize(True)
+        self.cc_grid.SetRowLabelSize(80)
+        self.cc_grid.SetRowLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
+
+        # Label Appearance
+
+        # Cell Defaults
+        self.cc_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
+        cc_sizer.Add(self.cc_grid, 0, wx.ALL, 5)
 
         status_sizer.Add(cc_sizer, 1, wx.EXPAND, 5)
 

@@ -57,7 +57,7 @@ class FesRootFrame(RootFrame):
             self.amt_text_ctrl.Clear()
             self.amt_text_ctrl.SetFocus()
             return
-        status_dict = self.fb.check_status(self.tran_date, self.settle_type, self.org_nick_name, self.total_amt)
+        status_dict = self.fb.check_status(self.tran_date, self.settle_type, self.org_nick_name)
         self.show_status(status_dict)
 
     def disable_status(self):
@@ -65,14 +65,19 @@ class FesRootFrame(RootFrame):
         self.ca_static_text.Disable()
         self.ca_button.Disable()
         self.ca_grid.ClearGrid()
+        self.ca_grid.AutoSize()
 
         self.cs_static_text.SetLabel('未清算')
         self.cs_static_text.Disable()
         self.cs_button.Disable()
+        self.cs_grid.ClearGrid()
+        self.cs_grid.AutoSize()
 
         self.cc_static_text.SetLabel('未到账')
         self.cc_static_text.Disable()
         self.cc_button.Disable()
+        self.cc_grid.ClearGrid()
+        self.cs_grid.AutoSize()
 
     def show_status(self, status_dict):
         print(status_dict)
@@ -86,15 +91,13 @@ class FesRootFrame(RootFrame):
             self.ca_static_text.SetLabel('未对账')
             self.ca_static_text.SetForegroundColour((255, 0, 0))
             self.ca_button.Enable()
-            self.ca_grid.SetCellValue(0, 0, str(status_dict.get('unchecked')[0]))
-            self.ca_grid.SetCellValue(0, 1, str(status_dict.get('unchecked')[1]))
+            self.insert_into_gird(self.ca_grid, status_dict.get('unchecked'))
         elif status_dict.get('checked'):
             self.ca_static_text.Enable()
             self.ca_static_text.SetLabel('已对账')
             self.ca_static_text.SetForegroundColour((0, 255, 0))
             self.ca_button.Disable()
-            self.ca_grid.SetCellValue(0, 0, str(status_dict.get('checked')[0]))
-            self.ca_grid.SetCellValue(0, 1, str(status_dict.get('checked')[1]))
+            self.insert_into_gird(self.ca_grid, status_dict.get('checked'))
 
         if status_dict.get('unsettled'):
             self.cs_static_text.Enable()
@@ -106,6 +109,7 @@ class FesRootFrame(RootFrame):
             self.cs_static_text.SetLabel('已清算')
             self.cs_static_text.SetForegroundColour((0, 255, 0))
             self.cs_button.Disable()
+            self.insert_into_gird(self.cs_grid, status_dict.get('settled'))
 
         if status_dict.get('unconfirmed'):
             self.cc_static_text.Enable()
@@ -117,6 +121,8 @@ class FesRootFrame(RootFrame):
             self.cc_static_text.SetLabel('已到账')
             self.cc_static_text.SetForegroundColour((0, 255, 0))
             self.cc_button.Disable()
+            self.insert_into_gird(self.cc_grid, status_dict.get('confirmed'))
+        self.Layout()
 
     def on_ca_button(self, event):
         self.fb.post_check_account(self.tran_date, self.org_nick_name)
@@ -126,3 +132,23 @@ class FesRootFrame(RootFrame):
 
     def on_cc_button(self, event):
         event.Skip()
+
+    @staticmethod
+    def insert_into_gird(grid, data):
+        if not len(data):
+            return
+        row_num, column_num = len(data), len(data[0])
+        grid_row_num = grid.GetNumberRows()
+        print(grid.GetNumberRows())
+        if row_num > grid_row_num:
+            grid.AppendRows(row_num - grid_row_num)
+        if row_num < grid_row_num:
+            grid.DeleteRows(1, grid_row_num - row_num)
+        i, j = 0, 0
+        for row in data:
+            for ele in row:
+                grid.SetCellValue(j, i, str(ele))
+                i += 1
+            i = 0
+            j += 1
+        grid.AutoSize()
