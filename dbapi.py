@@ -44,7 +44,7 @@ class DataBaseApi(object):
             if bank_code == v[1]:
                 res = self.session.execute("select aae076,count(1) from fes_online_detail where settle_type='%s' and "
                                            "tran_date='%s' and is_check='0' and org_nick_name='%s' group by aae076 "
-                                           "having count(1)>1" % (v[0], tran_date, k)).fetchone()
+                                           "having count(1)>1" % (v[0], tran_date, k)).fetchall()
                 if res:
                     repeats.append((k, res[0], res[1]))
         return repeats

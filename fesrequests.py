@@ -51,3 +51,26 @@ class FesB2304(FesRequest):
     def post(self):
         resp = requests.post(post_urls['B2304'], data=json.dumps(self.data))
         print(resp.text)
+
+
+# 联机交易生成退款文件请求
+class FesB2306(FesRequest):
+    def __init__(self):
+        super().__init__('2306')
+        self.data = {"trans_code": "2306"}
+
+    def post(self):
+        resp = requests.post(post_urls['B2306'], data=json.dumps(self.data))
+        print(resp.text)
+
+
+# 联机交易回写请求
+class FesB2211(FesRequest):
+    def __init__(self):
+        super().__init__('2211')
+        self.data = {"trans_code": "2211"}
+
+    def post(self):
+        resp = requests.post(post_urls['B2211'], data=json.dumps(self.data))
+        print(resp.text)
+

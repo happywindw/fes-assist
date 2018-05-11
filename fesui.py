@@ -224,6 +224,7 @@ class FesRootFrame(RootFrame):
                 self.cc_static_text.SetLabel('已到账')
                 if self.get_total_amt(status_dict.get('confirmed')) == total_amt:
                     self.cc_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
+                    self.cc_button.Enable()
                     self.cc_detail_text.Hide()
                     self.cc_detail_button.Hide()
                 else:
