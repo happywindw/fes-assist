@@ -95,7 +95,7 @@ class RootFrame(wx.Frame):
                                             wx.DefaultSize, 0)
         self.ca_static_text.Wrap(-1)
         self.ca_static_text.SetFont(
-            wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑"))
+            wx.Font(14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑"))
 
         ca_sizer.Add(self.ca_static_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
@@ -138,7 +138,7 @@ class RootFrame(wx.Frame):
                                             wx.DefaultSize, 0)
         self.cs_static_text.Wrap(-1)
         self.cs_static_text.SetFont(
-            wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑"))
+            wx.Font(14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑"))
 
         cs_sizer.Add(self.cs_static_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
@@ -183,7 +183,7 @@ class RootFrame(wx.Frame):
                                             wx.DefaultSize, 0)
         self.cc_static_text.Wrap(-1)
         self.cc_static_text.SetFont(
-            wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑"))
+            wx.Font(14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑"))
 
         cc_sizer.Add(self.cc_static_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 

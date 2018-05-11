@@ -8,6 +8,14 @@ class FesRootFrame(RootFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.fb = FesBusi()
+        self.rgb_dict = {
+            'Black': (0, 0, 0),
+            'White': (255, 255, 255),
+            'Red': (255, 0, 0),
+            'Blue': (0, 0, 255),
+            'LimeGreen': (50, 205, 50),
+            'Gold': (255, 215, 0)
+        }
 
         self.trans_choice_dict = {
             0: ('', ''),
@@ -59,7 +67,7 @@ class FesRootFrame(RootFrame):
             return
         self.SetCursor(wx.Cursor(wx.CURSOR_ARROWWAIT))
         status_dict = self.fb.check_status(self.tran_date, self.settle_type, self.org_nick_name)
-        self.show_status(status_dict)
+        self.show_status(status_dict, self.total_amt)
         self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
 
     def disable_status(self):
@@ -81,47 +89,59 @@ class FesRootFrame(RootFrame):
         self.cc_grid.ClearGrid()
         self.cc_grid.AutoSize()
 
-    def show_status(self, status_dict):
+    def show_status(self, status_dict, total_amt):
         print(status_dict)
         if status_dict.get('no_business'):
             self.ca_static_text.Enable()
             self.ca_static_text.SetLabel('无业务')
-            self.ca_static_text.SetForegroundColour((0, 0, 255))
+            self.ca_static_text.SetForegroundColour(self.rgb_dict['Black'])
             self.ca_button.Disable()
         elif status_dict.get('unchecked'):
             self.ca_static_text.Enable()
             self.ca_static_text.SetLabel('未对账')
-            self.ca_static_text.SetForegroundColour((255, 0, 0))
+            if self.get_total_amt(status_dict.get('unchecked')) == total_amt:
+                self.ca_static_text.SetForegroundColour(self.rgb_dict['Blue'])
+            else:
+                self.ca_static_text.SetForegroundColour(self.rgb_dict['Gold'])
             self.ca_button.Enable()
             self.insert_into_gird(self.ca_grid, status_dict.get('unchecked'))
         elif status_dict.get('checked'):
             self.ca_static_text.Enable()
             self.ca_static_text.SetLabel('已对账')
-            self.ca_static_text.SetForegroundColour((0, 255, 0))
+            if self.get_total_amt(status_dict.get('checked')) == total_amt:
+                self.ca_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
+            else:
+                self.ca_static_text.SetForegroundColour(self.rgb_dict['Gold'])
             self.ca_button.Disable()
             self.insert_into_gird(self.ca_grid, status_dict.get('checked'))
 
         if status_dict.get('unsettled'):
             self.cs_static_text.Enable()
             self.cs_static_text.SetLabel('未清算')
-            self.cs_static_text.SetForegroundColour((255, 0, 0))
+            self.cs_static_text.SetForegroundColour(self.rgb_dict['Blue'])
             self.cs_button.Enable()
         elif status_dict.get('settled'):
             self.cs_static_text.Enable()
             self.cs_static_text.SetLabel('已清算')
-            self.cs_static_text.SetForegroundColour((0, 255, 0))
+            if self.get_total_amt(status_dict.get('settled')) == total_amt:
+                self.cs_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
+            else:
+                self.cs_static_text.SetForegroundColour(self.rgb_dict['Gold'])
             self.cs_button.Disable()
             self.insert_into_gird(self.cs_grid, status_dict.get('settled'))
 
         if status_dict.get('unconfirmed'):
             self.cc_static_text.Enable()
             self.cc_static_text.SetLabel('未到账')
-            self.cc_static_text.SetForegroundColour((255, 0, 0))
+            self.cc_static_text.SetForegroundColour(self.rgb_dict['Blue'])
             self.cc_button.Disable()
         elif status_dict.get('confirmed'):
             self.cc_static_text.Enable()
             self.cc_static_text.SetLabel('已到账')
-            self.cc_static_text.SetForegroundColour((0, 255, 0))
+            if self.get_total_amt(status_dict.get('confirmed')) == total_amt:
+                self.cc_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
+            else:
+                self.cc_static_text.SetForegroundColour(self.rgb_dict['Gold'])
             self.cc_button.Disable()
             self.insert_into_gird(self.cc_grid, status_dict.get('confirmed'))
         self.Layout()
@@ -134,6 +154,15 @@ class FesRootFrame(RootFrame):
 
     def on_cc_button(self, event):
         event.Skip()
+
+    @staticmethod
+    def get_total_amt(data):
+        if not len(data):
+            return 0
+        total = 0.0
+        for row in data:
+            total += float(row[0])
+        return total
 
     @staticmethod
     def insert_into_gird(grid, data, row_labels=None, col_labels=None):
