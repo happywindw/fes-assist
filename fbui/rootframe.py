@@ -37,7 +37,10 @@ class RootFrame(wx.Frame):
 
         inner_sizer.Add(self.top_trans_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        config_sizer = wx.StaticBoxSizer(wx.StaticBox(self.root_panel, wx.ID_ANY, u"设置"), wx.HORIZONTAL)
+        self.config_panel = wx.Panel(self.root_panel, wx.ID_ANY, wx.DefaultPosition, wx.Size(-1, -1), wx.TAB_TRAVERSAL)
+        self.config_panel.SetMaxSize(wx.Size(-1, 100))
+
+        config_sizer = wx.StaticBoxSizer(wx.StaticBox(self.config_panel, wx.ID_ANY, u"设置"), wx.HORIZONTAL)
 
         self.trans_choice_text = wx.StaticText(config_sizer.GetStaticBox(), wx.ID_ANY, u"选择交易类型：", wx.DefaultPosition,
                                                wx.DefaultSize, 0)
@@ -78,11 +81,15 @@ class RootFrame(wx.Frame):
                                        wx.DefaultSize, 0)
         config_sizer.Add(self.status_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        inner_sizer.Add(config_sizer, 1, wx.ALL | wx.EXPAND, 10)
+        self.config_panel.SetSizer(config_sizer)
+        self.config_panel.Layout()
+        config_sizer.Fit(self.config_panel)
+        inner_sizer.Add(self.config_panel, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
 
-        status_sizer = wx.StaticBoxSizer(wx.StaticBox(self.root_panel, wx.ID_ANY, u"状态"), wx.VERTICAL)
+        self.status_panel = wx.Panel(self.root_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
+        status_sizer = wx.StaticBoxSizer(wx.StaticBox(self.status_panel, wx.ID_ANY, u"状态"), wx.VERTICAL)
 
-        ca_sizer = wx.WrapSizer(wx.HORIZONTAL)
+        ca_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         self.ca_static_text = wx.StaticText(status_sizer.GetStaticBox(), wx.ID_ANY, u"未对账", wx.DefaultPosition,
                                             wx.DefaultSize, 0)
@@ -121,13 +128,9 @@ class RootFrame(wx.Frame):
 
         # Cell Defaults
         self.ca_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
-        ca_sizer.Add(self.ca_grid, 0, wx.ALL, 5)
+        ca_sizer.Add(self.ca_grid, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        status_sizer.Add(ca_sizer, 1, wx.EXPAND, 5)
-
-        self.ca_static_line = wx.StaticLine(status_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
-                                            wx.LI_HORIZONTAL)
-        status_sizer.Add(self.ca_static_line, 0, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
+        status_sizer.Add(ca_sizer, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
 
         cs_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -177,11 +180,7 @@ class RootFrame(wx.Frame):
         self.cs_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
         cs_sizer.Add(self.cs_grid, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        status_sizer.Add(cs_sizer, 1, wx.EXPAND, 5)
-
-        self.cs_static_line = wx.StaticLine(status_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
-                                            wx.LI_HORIZONTAL)
-        status_sizer.Add(self.cs_static_line, 0, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
+        status_sizer.Add(cs_sizer, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
 
         cc_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -227,11 +226,14 @@ class RootFrame(wx.Frame):
 
         # Cell Defaults
         self.cc_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
-        cc_sizer.Add(self.cc_grid, 0, wx.ALL, 5)
+        cc_sizer.Add(self.cc_grid, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        status_sizer.Add(cc_sizer, 1, wx.EXPAND, 5)
+        status_sizer.Add(cc_sizer, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
 
-        inner_sizer.Add(status_sizer, 1, wx.ALL | wx.EXPAND, 5)
+        self.status_panel.SetSizer(status_sizer)
+        self.status_panel.Layout()
+        status_sizer.Fit(self.status_panel)
+        inner_sizer.Add(self.status_panel, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
 
         self.root_panel.SetSizer(inner_sizer)
         self.root_panel.Layout()
