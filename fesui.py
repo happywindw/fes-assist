@@ -78,7 +78,9 @@ class FesRootFrame(RootFrame):
         :param event:
         :return:
         """
-        self.fb.post_check_account(self.tran_date, self.org_nick_name)
+        re_check = self.fb.post_check_account(self.tran_date, self.settle_type, self.org_nick_name)
+        if re_check:  # 已经对过账，不能重复对账
+            wx.MessageBox('不能重复对账！')
         self.get_and_show_status(self.total_amt)
 
     def on_ca_detail(self, event):

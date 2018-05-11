@@ -92,9 +92,14 @@ class FesBusi(object):
         else:            # 未确认到账
             return False, -1
 
-    def post_check_account(self, tran_date, org_nick_name):
+    def post_check_account(self, tran_date, settle_type, org_nick_name):
+        is_check, check_info = self.check_account(tran_date, settle_type, org_nick_name)
+        if is_check:
+            return True
+
         req_2301 = FesB2301(tran_date, org_nick_name)
         req_2301.post()
+        return False
 
     def post_check_settle(self, tran_date, settle_type, org_nick_name):
         is_settle, settle_info = self.check_settle(tran_date, settle_type, org_nick_name)
