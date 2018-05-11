@@ -30,7 +30,7 @@ class RootFrame(wx.Frame):
         self.root_panel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.NO_BORDER | wx.TAB_TRAVERSAL)
         inner_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.top_trans_text = wx.StaticText(self.root_panel, wx.ID_ANY, u"fes", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.top_trans_text = wx.StaticText(self.root_panel, wx.ID_ANY, u"FES", wx.DefaultPosition, wx.DefaultSize, 0)
         self.top_trans_text.Wrap(-1)
         self.top_trans_text.SetFont(
             wx.Font(15, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑"))
@@ -59,7 +59,7 @@ class RootFrame(wx.Frame):
         config_sizer.Add(self.trans_date_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
         self.trans_date_picker = wx.adv.DatePickerCtrl(config_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultDateTime,
-                                                       wx.DefaultPosition, wx.DefaultSize, wx.adv.DP_DEFAULT)
+                                                       wx.DefaultPosition, wx.Size(-1, -1), wx.adv.DP_DROPDOWN)
         config_sizer.Add(self.trans_date_picker, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
         self.trans_amt_text = wx.StaticText(config_sizer.GetStaticBox(), wx.ID_ANY, u"          总金额：",
@@ -184,6 +184,15 @@ class RootFrame(wx.Frame):
         self.cs_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
         cs_sizer.Add(self.cs_grid, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
+        self.cs_detail_text = wx.StaticText(status_sizer.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition,
+                                            wx.DefaultSize, 0)
+        self.cs_detail_text.Wrap(-1)
+        cs_sizer.Add(self.cs_detail_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.cs_detail_button = wx.Button(status_sizer.GetStaticBox(), wx.ID_ANY, u"查看详情", wx.DefaultPosition,
+                                          wx.DefaultSize, 0)
+        cs_sizer.Add(self.cs_detail_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
         status_sizer.Add(cs_sizer, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
 
         cc_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -228,6 +237,15 @@ class RootFrame(wx.Frame):
         # Cell Defaults
         self.cc_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
         cc_sizer.Add(self.cc_grid, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.cc_detail_text = wx.StaticText(status_sizer.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition,
+                                            wx.DefaultSize, 0)
+        self.cc_detail_text.Wrap(-1)
+        cc_sizer.Add(self.cc_detail_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.cc_detail_button = wx.Button(status_sizer.GetStaticBox(), wx.ID_ANY, u"查看详情", wx.DefaultPosition,
+                                          wx.DefaultSize, 0)
+        cc_sizer.Add(self.cc_detail_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
         status_sizer.Add(cc_sizer, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
 

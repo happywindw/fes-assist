@@ -99,9 +99,10 @@ class FesBusi(object):
     def post_check_settle(self, tran_date, settle_type, org_nick_name):
         is_settle, settle_info = self.check_settle(tran_date, settle_type, org_nick_name)
         if is_settle:  # 避免重复清算
-            return
+            return True
 
         settle_date = self.db.get_settle_date(tran_date, settle_type, org_nick_name)
         req_2304 = FesB2304(settle_date, org_nick_name)
         req_2304.post()
+        return False
 
