@@ -168,7 +168,7 @@ class FesRootFrame(RootFrame):
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
             else:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['Gold'])
-                self.ca_detail_text.SetLabel('对账金额与总\n金额不一致!')
+                self.ca_detail_text.SetLabel('对账金额与总\n金额不一致！')
                 self.ca_detail_text.SetForegroundColour(self.rgb_dict['Gold'])
                 self.ca_detail_text.Show()
                 self.ca_detail_button.Show()
@@ -186,7 +186,7 @@ class FesRootFrame(RootFrame):
                 self.cs_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
             else:
                 self.cs_static_text.SetForegroundColour(self.rgb_dict['Gold'])
-                self.cs_detail_text.SetLabel('清算金额与总\n金额不一致!')
+                self.cs_detail_text.SetLabel('清算金额与总\n金额不一致！')
                 self.cs_detail_text.SetForegroundColour(self.rgb_dict['Gold'])
                 self.cs_detail_text.Show()
                 self.cs_detail_button.Show()
@@ -198,12 +198,43 @@ class FesRootFrame(RootFrame):
             self.cc_static_text.SetForegroundColour(self.rgb_dict['Blue'])
         elif status_dict.get('confirmed'):
             self.cc_static_text.Enable()
-
-            self.cc_static_text.SetLabel('已到账')
-            if self.get_total_amt(status_dict.get('confirmed')) == total_amt:
-                self.cc_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
-            else:
+            self.cc_detail_text.Show()
+            self.cc_detail_button.Show()
+            flag_03 = False
+            flag_11 = False
+            flag_success = True
+            for row in status_dict.get('confirmed'):
+                if '03' == row[1]:
+                    flag_03 = True
+                if '11' == row[1]:
+                    flag_11 = True
+                if '12' != row[1]:
+                    flag_success = False
+            if flag_03:
+                self.cc_static_text.SetLabel('未转账')
                 self.cc_static_text.SetForegroundColour(self.rgb_dict['Gold'])
+                self.cc_detail_text.SetLabel('已生成流水')
+                self.cc_detail_text.SetForegroundColour(self.rgb_dict['Gold'])
+            elif flag_11:
+                self.cc_static_text.SetLabel('未到账')
+                self.cc_static_text.SetForegroundColour(self.rgb_dict['Gold'])
+                self.cc_detail_text.SetLabel('未确认到账')
+                self.cc_detail_text.SetForegroundColour(self.rgb_dict['Gold'])
+            elif flag_success:
+                self.cc_static_text.SetLabel('已到账')
+                if self.get_total_amt(status_dict.get('confirmed')) == total_amt:
+                    self.cc_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
+                    self.cc_detail_text.Hide()
+                    self.cc_detail_button.Hide()
+                else:
+                    self.cc_static_text.SetForegroundColour(self.rgb_dict['Gold'])
+                    self.cc_detail_text.SetLabel('到账金额与总\n金额不一致！')
+                    self.cc_detail_text.SetForegroundColour(self.rgb_dict['Gold'])
+            else:
+                self.cc_static_text.SetLabel('未到账')
+                self.cc_static_text.SetForegroundColour(self.rgb_dict['Red'])
+                self.cc_detail_text.SetLabel('未知异常！')
+                self.cc_detail_text.SetForegroundColour(self.rgb_dict['Red'])
             self.insert_into_gird(self.cc_grid, status_dict.get('confirmed'))
         self.Layout()
 
