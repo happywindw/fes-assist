@@ -115,8 +115,8 @@ class RootFrame(wx.Frame):
         self.ca_grid.EnableDragColMove(False)
         self.ca_grid.EnableDragColSize(True)
         self.ca_grid.SetColLabelSize(30)
-        self.ca_grid.SetColLabelValue(0, u"笔数")
-        self.ca_grid.SetColLabelValue(1, u"金额")
+        self.ca_grid.SetColLabelValue(0, u"金额")
+        self.ca_grid.SetColLabelValue(1, u"笔数")
         self.ca_grid.SetColLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
 
         # Rows
@@ -148,7 +148,7 @@ class RootFrame(wx.Frame):
         self.cs_grid = wx.grid.Grid(status_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
 
         # Grid
-        self.cs_grid.CreateGrid(1, 7)
+        self.cs_grid.CreateGrid(1, 4)
         self.cs_grid.EnableEditing(True)
         self.cs_grid.EnableGridLines(True)
         self.cs_grid.EnableDragGridSize(False)
@@ -162,11 +162,6 @@ class RootFrame(wx.Frame):
         self.cs_grid.SetColLabelValue(1, u"IS_CONFIRMED")
         self.cs_grid.SetColLabelValue(2, u"SETTLE_STATUS")
         self.cs_grid.SetColLabelValue(3, u"CURRENT_DIRECTION")
-        self.cs_grid.SetColLabelValue(4, u"CURRENT_FUND_LOG_ID")
-        self.cs_grid.SetColLabelValue(5, u"ACCT_A")
-        self.cs_grid.SetColLabelValue(6, u"SETTLE_LOG_ID")
-        self.cs_grid.SetColLabelValue(7, u"CURRENT_DIRECTION")
-        self.cs_grid.SetColLabelValue(8, u"CURRENT")
         self.cs_grid.SetColLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
 
         # Rows
@@ -198,7 +193,7 @@ class RootFrame(wx.Frame):
         self.cc_grid = wx.grid.Grid(status_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
 
         # Grid
-        self.cc_grid.CreateGrid(1, 7)
+        self.cc_grid.CreateGrid(1, 4)
         self.cc_grid.EnableEditing(True)
         self.cc_grid.EnableGridLines(True)
         self.cc_grid.EnableDragGridSize(False)
@@ -212,9 +207,6 @@ class RootFrame(wx.Frame):
         self.cc_grid.SetColLabelValue(1, u"STATUS")
         self.cc_grid.SetColLabelValue(2, u"IS_CHECK")
         self.cc_grid.SetColLabelValue(3, u"CURRENT_DIRECTION")
-        self.cc_grid.SetColLabelValue(4, u"FUND_SEQ_NO")
-        self.cc_grid.SetColLabelValue(5, u"IN_ACCT_NO")
-        self.cc_grid.SetColLabelValue(6, u"SETTLE_LOG_ID")
         self.cc_grid.SetColLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
 
         # Rows

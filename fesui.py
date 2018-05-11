@@ -57,8 +57,10 @@ class FesRootFrame(RootFrame):
             self.amt_text_ctrl.Clear()
             self.amt_text_ctrl.SetFocus()
             return
+        self.SetCursor(wx.Cursor(wx.CURSOR_ARROWWAIT))
         status_dict = self.fb.check_status(self.tran_date, self.settle_type, self.org_nick_name)
         self.show_status(status_dict)
+        self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
 
     def disable_status(self):
         self.ca_static_text.SetLabel('未对账')
@@ -77,7 +79,7 @@ class FesRootFrame(RootFrame):
         self.cc_static_text.Disable()
         self.cc_button.Disable()
         self.cc_grid.ClearGrid()
-        self.cs_grid.AutoSize()
+        self.cc_grid.AutoSize()
 
     def show_status(self, status_dict):
         print(status_dict)
