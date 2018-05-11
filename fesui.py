@@ -26,7 +26,7 @@ class FesRootFrame(RootFrame):
             5: ('8', 'CCBAPP')
         }
         self.total_amt = 0.0
-        self.tran_date = self.trans_date_picker.GetValue().Format('%Y-%m-%d')
+        self.tran_date = self.trans_date_picker.GetValue().Format('%Y%m%d')
         self.settle_type = ''
         self.org_nick_name = ''
 
@@ -65,6 +65,7 @@ class FesRootFrame(RootFrame):
             self.amt_text_ctrl.Clear()
             self.amt_text_ctrl.SetFocus()
             return
+        self.top_trans_text.SetLabel(self.tran_date + '日  ' + self.org_nick_name + '  总金额：' + str(self.total_amt))
         self.SetCursor(wx.Cursor(wx.CURSOR_ARROWWAIT))
         status_dict = self.fb.check_status(self.tran_date, self.settle_type, self.org_nick_name)
         self.show_status(status_dict, self.total_amt)
@@ -76,6 +77,8 @@ class FesRootFrame(RootFrame):
         self.ca_button.Disable()
         self.ca_grid.ClearGrid()
         self.ca_grid.AutoSize()
+        self.ca_detail_text.Hide()
+        self.ca_detail_button.Hide()
 
         self.cs_static_text.SetLabel('未清算')
         self.cs_static_text.Disable()
@@ -99,19 +102,38 @@ class FesRootFrame(RootFrame):
         elif status_dict.get('unchecked'):
             self.ca_static_text.Enable()
             self.ca_static_text.SetLabel('未对账')
-            if self.get_total_amt(status_dict.get('unchecked')) == total_amt:
+            if status_dict.get('repeat_aae076'):
+                self.ca_static_text.SetForegroundColour(self.rgb_dict['Red'])
+                self.ca_detail_text.SetLabel('对账文件笔数和更新笔数不一致!')
+                self.ca_detail_text.Show()
+                self.ca_detail_button.Show()
+            elif self.get_total_amt(status_dict.get('unchecked')) == total_amt:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['Blue'])
+                self.ca_detail_text.Hide()
+                self.ca_detail_button.Hide()
             else:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['Gold'])
+                self.ca_detail_text.SetLabel('总金额不一致!')
+                self.ca_detail_text.Show()
+                self.ca_detail_button.Show()
             self.ca_button.Enable()
             self.insert_into_gird(self.ca_grid, status_dict.get('unchecked'))
         elif status_dict.get('checked'):
             self.ca_static_text.Enable()
             self.ca_static_text.SetLabel('已对账')
+            if status_dict.get('check_diff'):
+                self.ca_detail_text.SetLabel('存在单边账!')
+                self.ca_detail_text.Show()
+                self.ca_detail_button.Show()
             if self.get_total_amt(status_dict.get('checked')) == total_amt:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
+                self.ca_detail_text.Hide()
+                self.ca_detail_button.Hide()
             else:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['Gold'])
+                self.ca_detail_text.SetLabel('总金额不一致!')
+                self.ca_detail_text.Show()
+                self.ca_detail_button.Show()
             self.ca_button.Disable()
             self.insert_into_gird(self.ca_grid, status_dict.get('checked'))
 
@@ -148,6 +170,9 @@ class FesRootFrame(RootFrame):
 
     def on_ca_button(self, event):
         self.fb.post_check_account(self.tran_date, self.org_nick_name)
+
+    def on_ca_detail(self, event):
+        pass
 
     def on_cs_button(self, event):
         self.fb.post_check_settle(self.tran_date, self.settle_type, self.org_nick_name)

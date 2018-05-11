@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-from settings import pro_db
+from settings import pro_db, bank_dict
 
 
 class DataBaseApi(object):
@@ -31,18 +31,23 @@ class DataBaseApi(object):
                                    % (settle_type, tran_date, is_check, org_nick_name))
         return res.fetchone()
 
-    def get_repeat_aae076(self, tran_date, settle_type, org_nick_name):
+    def get_repeat_aae076(self, tran_date, org_nick_name):
         """
-        查询重复的aae076
+        查询同行重复的aae076
         :param tran_date:
-        :param settle_type:
         :param org_nick_name:
         :return:
         """
-        res = self.session.execute("select aae076,count(1) from fes_online_detail where settle_type='%s' and "
-                                   "tran_date='%s' and is_check='0' and org_nick_name='%s' group by aae076 "
-                                   "having count(1)>1" % (settle_type, tran_date, org_nick_name))
-        return res.fetchall()
+        bank_code = bank_dict.get(org_nick_name)[1]
+        repeats = []
+        for k, v in bank_dict.items():
+            if bank_code == v[1]:
+                res = self.session.execute("select aae076,count(1) from fes_online_detail where settle_type='%s' and "
+                                           "tran_date='%s' and is_check='0' and org_nick_name='%s' group by aae076 "
+                                           "having count(1)>1" % (v[0], tran_date, k)).fetchone()
+                if res:
+                    repeats.append((k, res[0], res[1]))
+        return repeats
 
     def delete_repeat_aae076(self, aae076):
         """

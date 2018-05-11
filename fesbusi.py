@@ -14,9 +14,9 @@ class FesBusi(object):
         if not is_check and not check_info:  # 无业务
             return {'no_business': -1}
         if not is_check:                     # 未成功对帐
-            ra = self.db.get_repeat_aae076(tran_date, settle_type, org_nick_name)
+            ra = self.db.get_repeat_aae076(tran_date, org_nick_name)
             if ra:  # 存在重复的aae076
-                status_dict['repeat_aae076'] = ra[0]
+                status_dict['repeat_aae076'] = ra
                 print(ra[0])
             status_dict['unchecked'] = [(check_info[0], check_info[1])]
             return status_dict

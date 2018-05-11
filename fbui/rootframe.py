@@ -130,6 +130,15 @@ class RootFrame(wx.Frame):
         self.ca_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
         ca_sizer.Add(self.ca_grid, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
+        self.ca_detail_text = wx.StaticText(status_sizer.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition,
+                                            wx.DefaultSize, 0)
+        self.ca_detail_text.Wrap(-1)
+        ca_sizer.Add(self.ca_detail_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.ca_detail_button = wx.Button(status_sizer.GetStaticBox(), wx.ID_ANY, u"查看详情", wx.DefaultPosition,
+                                          wx.DefaultSize, 0)
+        ca_sizer.Add(self.ca_detail_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
         status_sizer.Add(ca_sizer, 1, wx.ALIGN_CENTER | wx.ALL | wx.EXPAND, 5)
 
         cs_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -242,6 +251,7 @@ class RootFrame(wx.Frame):
         self.trans_date_picker.Bind(wx.adv.EVT_DATE_CHANGED, self.on_change_date)
         self.status_button.Bind(wx.EVT_BUTTON, self.on_get_status)
         self.ca_button.Bind(wx.EVT_BUTTON, self.on_ca_button)
+        self.ca_detail_button.Bind(wx.EVT_BUTTON, self.on_ca_detail)
         self.cs_button.Bind(wx.EVT_BUTTON, self.on_cs_button)
         self.cc_button.Bind(wx.EVT_BUTTON, self.on_cc_button)
 
@@ -259,6 +269,9 @@ class RootFrame(wx.Frame):
         event.Skip()
 
     def on_ca_button(self, event):
+        event.Skip()
+
+    def on_ca_detail(self, event):
         event.Skip()
 
     def on_cs_button(self, event):
