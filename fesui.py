@@ -148,7 +148,7 @@ class FesRootFrame(RootFrame):
                 self.ca_detail_text.SetForegroundColour(self.rgb_dict['Red'])
                 self.ca_detail_text.Show()
                 self.ca_detail_button.Show()
-            elif self.get_total_amt(status_dict.get('unchecked')) == total_amt:
+            elif abs(self.get_total_amt(status_dict.get('unchecked')) - total_amt) < 0.001:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['Blue'])
             else:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['Gold'])
@@ -166,7 +166,7 @@ class FesRootFrame(RootFrame):
                 self.ca_detail_text.SetForegroundColour(self.rgb_dict['Red'])
                 self.ca_detail_text.Show()
                 self.ca_detail_button.Show()
-            if self.get_total_amt(status_dict.get('checked')) == total_amt:
+            if abs(self.get_total_amt(status_dict.get('checked')) - total_amt) < 0.001:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
             else:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['Gold'])
@@ -184,7 +184,7 @@ class FesRootFrame(RootFrame):
         elif status_dict.get('settled'):
             self.cs_static_text.Enable()
             self.cs_static_text.SetLabel('已清算')
-            if self.get_total_amt(status_dict.get('settled')) == total_amt:
+            if abs(self.get_total_amt(status_dict.get('settled')) - total_amt) < 0.001:
                 self.cs_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
             else:
                 self.cs_static_text.SetForegroundColour(self.rgb_dict['Gold'])
@@ -224,7 +224,7 @@ class FesRootFrame(RootFrame):
                 self.cc_detail_text.SetForegroundColour(self.rgb_dict['Gold'])
             elif flag_success:
                 self.cc_static_text.SetLabel('已到账')
-                if self.get_total_amt(status_dict.get('confirmed')) == total_amt:
+                if abs(self.get_total_amt(status_dict.get('confirmed')) - total_amt) < 0.001:
                     self.cc_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
                     self.cc_button.Enable()
                     self.cc_detail_text.Hide()
