@@ -82,6 +82,7 @@ class FesRootFrame(RootFrame):
         if re_check:  # 已经对过账，不能重复对账
             wx.MessageBox('不能重复对账！')
         self.get_and_show_status(self.total_amt)
+        self.ca_button.Disable()
 
     def on_ca_detail(self, event):
         pass
@@ -96,6 +97,7 @@ class FesRootFrame(RootFrame):
         if re_settle:  # 已经清算过，不能重复清算
             wx.MessageBox('不能重复清算！')
         self.get_and_show_status(self.total_amt)
+        self.cs_button.Disable()
 
     def on_cc_button(self, event):
         event.Skip()
@@ -246,6 +248,7 @@ class FesRootFrame(RootFrame):
         total = 0.0
         for row in data:
             total += float(row[0])
+        print('total: %f' % total)
         return total
 
     @staticmethod

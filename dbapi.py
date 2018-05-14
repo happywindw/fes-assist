@@ -46,7 +46,8 @@ class DataBaseApi(object):
                                            "tran_date='%s' and is_check='0' and org_nick_name='%s' group by aae076 "
                                            "having count(1)>1" % (v[0], tran_date, k)).fetchall()
                 if res:
-                    repeats.append((k, res[0], res[1]))
+                    for r in res:
+                        repeats.append((k, r[0], r[1]))
         return repeats
 
     def delete_repeat_aae076(self, aae076):
