@@ -1,7 +1,22 @@
 # -*- coding: utf-8 -*-
 import wx
+
+from fbui.aae076dialog import Aae076Dialog
 from fbui.rootframe import RootFrame
 from fesbusi import FesBusi
+from utils import insert_into_gird
+
+
+class FEesAae076Dialog(Aae076Dialog):
+    def __init__(self, parent, td, st, onn, ra):
+        super().__init__(parent)
+        self.tran_date = td
+        self.settle_type = st
+        self.org_nick_name = onn
+        self.repeat_aae076 = ra
+        insert_into_gird(self.aae076_grid, ra)
+        self.aae076_grid.AutoSize()
+        self.Layout()
 
 
 class FesRootFrame(RootFrame):
@@ -15,6 +30,11 @@ class FesRootFrame(RootFrame):
             'Blue': (0, 0, 255),
             'LimeGreen': (50, 205, 50),
             'Gold': (255, 215, 0)
+        }
+        self.btn_code_dict = {
+            'ca_button': 0,
+            'cs_button': 0,
+            'cc_button': 0
         }
 
         self.trans_choice_dict = {
@@ -33,6 +53,7 @@ class FesRootFrame(RootFrame):
         self.is_check = False
         self.is_settle = False
         self.is_confirm = False
+        self.status = {}
 
         self.top_trans_text.SetLabel('FES')
         self.top_trans_text.SetForegroundColour(self.rgb_dict['Blue'])
@@ -69,7 +90,7 @@ class FesRootFrame(RootFrame):
         self.top_trans_text.SetLabel(s_date + self.org_nick_name + '  总金额：' + str(self.total_amt))
         self.SetCursor(wx.Cursor(wx.CURSOR_ARROWWAIT))
         self.reset_status()
-        self.get_and_show_status(self.total_amt)
+        self.status = self.get_and_show_status()
         self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
 
     def on_ca_button(self, event):
@@ -84,13 +105,21 @@ class FesRootFrame(RootFrame):
             md.Destroy()
             if re_check:  # 已经对过账，不能重复对账
                 wx.MessageBox('不能重复对账！')
-            self.get_and_show_status(self.total_amt)
+            self.get_and_show_status()
             self.ca_button.Disable()
         else:
             md.Destroy()
 
     def on_ca_detail(self, event):
-        pass
+        if not self.btn_code_dict['ca_button']:
+            return
+        elif self.btn_code_dict['ca_button'] == -1:
+            pass
+        elif self.btn_code_dict['ca_button'] == -2:
+            ad = FEesAae076Dialog(self, self.tran_date, self.settle_type,
+                                  self.org_nick_name, self.status['repeat_aae076'])
+            if ad.ShowModal() == wx.ID_CANCEL:
+                ad.Destroy()
 
     def on_cs_button(self, event):
         """
@@ -104,7 +133,7 @@ class FesRootFrame(RootFrame):
             re_settle = self.fb.post_check_settle(self.tran_date, self.settle_type, self.org_nick_name)
             if re_settle:  # 已经清算过，不能重复清算
                 wx.MessageBox('不能重复清算！')
-            self.get_and_show_status(self.total_amt)
+            self.get_and_show_status()
             self.cs_button.Disable()
         else:
             md.Destroy()
@@ -140,10 +169,12 @@ class FesRootFrame(RootFrame):
         self.cc_detail_text.Hide()
         self.cc_detail_button.Hide()
 
-    def get_and_show_status(self, total_amt):
+        for k in self.btn_code_dict.keys():
+            self.btn_code_dict[k] = 0
+
+    def get_and_show_status(self):
         """
         获取并显示当日当前业务的对账清算到账状态
-        :param total_amt:
         :return:
         """
         status_dict = self.fb.check_status(self.tran_date, self.settle_type, self.org_nick_name)
@@ -157,11 +188,12 @@ class FesRootFrame(RootFrame):
             self.ca_static_text.SetLabel('未对账')
             if status_dict.get('repeat_aae076'):
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['Red'])
-                self.ca_detail_text.SetLabel('对账文件笔数和更\n新笔数不一致!')
+                self.ca_detail_text.SetLabel('对账文件笔数和\n更新笔数不一致!')
                 self.ca_detail_text.SetForegroundColour(self.rgb_dict['Red'])
                 self.ca_detail_text.Show()
                 self.ca_detail_button.Show()
-            elif abs(self.get_total_amt(status_dict.get('unchecked')) - total_amt) < 0.001:
+                self.btn_code_dict['ca_button'] = -2
+            elif abs(self.get_total_amt(status_dict.get('unchecked')) - self.total_amt) < 0.001:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['Blue'])
             else:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['Gold'])
@@ -169,8 +201,9 @@ class FesRootFrame(RootFrame):
                 self.ca_detail_text.SetForegroundColour(self.rgb_dict['Gold'])
                 self.ca_detail_text.Show()
                 self.ca_detail_button.Show()
+                self.btn_code_dict['ca_button'] = -1
             self.ca_button.Enable()
-            self.insert_into_gird(self.ca_grid, status_dict.get('unchecked'))
+            insert_into_gird(self.ca_grid, status_dict.get('unchecked'))
         elif status_dict.get('checked'):
             self.ca_static_text.Enable()
             self.ca_static_text.SetLabel('已对账')
@@ -179,7 +212,7 @@ class FesRootFrame(RootFrame):
                 self.ca_detail_text.SetForegroundColour(self.rgb_dict['Red'])
                 self.ca_detail_text.Show()
                 self.ca_detail_button.Show()
-            if abs(self.get_total_amt(status_dict.get('checked')) - total_amt) < 0.001:
+            if abs(self.get_total_amt(status_dict.get('checked')) - self.total_amt) < 0.001:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
             else:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['Gold'])
@@ -187,7 +220,7 @@ class FesRootFrame(RootFrame):
                 self.ca_detail_text.SetForegroundColour(self.rgb_dict['Gold'])
                 self.ca_detail_text.Show()
                 self.ca_detail_button.Show()
-            self.insert_into_gird(self.ca_grid, status_dict.get('checked'))
+            insert_into_gird(self.ca_grid, status_dict.get('checked'))
 
         if status_dict.get('unsettled'):
             self.cs_static_text.Enable()
@@ -197,7 +230,7 @@ class FesRootFrame(RootFrame):
         elif status_dict.get('settled'):
             self.cs_static_text.Enable()
             self.cs_static_text.SetLabel('已清算')
-            if abs(self.get_total_amt(status_dict.get('settled')) - total_amt) < 0.001:
+            if abs(self.get_total_amt(status_dict.get('settled')) - self.total_amt) < 0.001:
                 self.cs_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
             else:
                 self.cs_static_text.SetForegroundColour(self.rgb_dict['Gold'])
@@ -205,7 +238,7 @@ class FesRootFrame(RootFrame):
                 self.cs_detail_text.SetForegroundColour(self.rgb_dict['Gold'])
                 self.cs_detail_text.Show()
                 self.cs_detail_button.Show()
-            self.insert_into_gird(self.cs_grid, status_dict.get('settled'))
+            insert_into_gird(self.cs_grid, status_dict.get('settled'))
 
         if status_dict.get('unconfirmed'):
             self.cc_static_text.Enable()
@@ -237,7 +270,7 @@ class FesRootFrame(RootFrame):
                 self.cc_detail_text.SetForegroundColour(self.rgb_dict['Gold'])
             elif flag_success:
                 self.cc_static_text.SetLabel('已到账')
-                if abs(self.get_total_amt(status_dict.get('confirmed')) - total_amt) < 0.001:
+                if abs(self.get_total_amt(status_dict.get('confirmed')) - self.total_amt) < 0.001:
                     self.cc_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
                     self.cc_button.Enable()
                     self.cc_detail_text.Hide()
@@ -251,8 +284,9 @@ class FesRootFrame(RootFrame):
                 self.cc_static_text.SetForegroundColour(self.rgb_dict['Red'])
                 self.cc_detail_text.SetLabel('未知异常！')
                 self.cc_detail_text.SetForegroundColour(self.rgb_dict['Red'])
-            self.insert_into_gird(self.cc_grid, status_dict.get('confirmed'))
+            insert_into_gird(self.cc_grid, status_dict.get('confirmed'))
         self.Layout()
+        return status_dict
 
     def on_mib9999(self, event):
         event.Skip()
@@ -272,35 +306,3 @@ class FesRootFrame(RootFrame):
             total += float(row[0])
         print('total: %f' % total)
         return total
-
-    @staticmethod
-    def insert_into_gird(grid, data, row_labels=None, col_labels=None):
-        if not len(data):
-            return
-        row_num, col_num = len(data), len(data[0])
-        grid_row_num = grid.GetNumberRows()
-        grid_col_num = grid.GetNumberCols()
-
-        # 设置行数与列数使之与数据匹配
-        if row_num > grid_row_num:
-            grid.AppendRows(row_num - grid_row_num)
-        if row_num < grid_row_num:
-            grid.DeleteRows(row_num, grid_row_num - row_num)
-        if col_num > grid_col_num:
-            grid.AppendCols(col_num - grid_col_num)
-        if col_num < grid_col_num:
-            grid.DeleteCols(col_num, grid_col_num - col_num)
-
-        # 设置各行、列的标题
-        if row_labels and len(row_labels) == row_num:
-            for i, lab in enumerate(row_labels):
-                grid.SetRowLabelValue(i, lab)
-        if col_labels and len(col_labels) == col_num:
-            for j, lab in enumerate(col_labels):
-                grid.SetColLabelValue(j, lab)
-
-        # 填充数据
-        for j, row in enumerate(data):
-            for i, ele in enumerate(row):
-                grid.SetCellValue(j, i, str(ele))
-        grid.AutoSize()
