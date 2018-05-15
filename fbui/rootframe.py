@@ -263,10 +263,10 @@ class RootFrame(wx.Frame):
         self.Layout()
         self.menu_bar = wx.MenuBar(0)
         self.menu_req = wx.Menu()
-        self.mi_b9999 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"MyMenuItem", wx.EmptyString, wx.ITEM_NORMAL)
+        self.mi_b9999 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B9999", wx.EmptyString, wx.ITEM_NORMAL)
         self.menu_req.Append(self.mi_b9999)
 
-        self.mi_b2306 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"MyMenuItem", wx.EmptyString, wx.ITEM_NORMAL)
+        self.mi_b2306 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B2306", wx.EmptyString, wx.ITEM_NORMAL)
         self.menu_req.Append(self.mi_b2306)
 
         self.menu_bar.Append(self.menu_req, u"Requests")

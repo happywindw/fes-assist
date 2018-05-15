@@ -2672,7 +2672,7 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">MyMenuItem</property>
+                        <property name="label">发送B9999</property>
                         <property name="name">mi_b9999</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
@@ -2687,7 +2687,7 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">MyMenuItem</property>
+                        <property name="label">发送B2306</property>
                         <property name="name">mi_b2306</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>

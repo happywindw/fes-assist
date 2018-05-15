@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from dbapi import DataBaseApi
-from fesrequests import FesB2301, FesB2304
+from fesrequests import FesB2301, FesB2304, FesB2306
 
 
 class FesBusi(object):
@@ -110,4 +110,7 @@ class FesBusi(object):
         req_2304 = FesB2304(settle_date, org_nick_name)
         req_2304.post()
         return False
+
+    def post_b2306(self):
+        FesB2306().post()
 

@@ -245,7 +245,10 @@ class FesRootFrame(RootFrame):
         event.Skip()
 
     def on_mib2306(self, event):
-        event.Skip()
+        md = wx.MessageDialog(None, '确定发送B2306请求生成退款文件？', 'B2306', wx.YES_NO | wx.ICON_QUESTION)
+        if md.ShowModal() == wx.ID_YES:
+            self.fb.post_b2306()
+        md.Destroy()
 
     @staticmethod
     def get_total_amt(data):
