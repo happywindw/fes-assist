@@ -263,7 +263,7 @@ class RootFrame(wx.Frame):
         self.Layout()
         self.menu_bar = wx.MenuBar(0)
         self.menu_req = wx.Menu()
-        self.mi_b9999 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B9999", u"发送B9999请求获取交易明细文件", wx.ITEM_NORMAL)
+        self.mi_b9999 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B9999...", u"发送B9999请求获取交易明细文件", wx.ITEM_NORMAL)
         self.menu_req.Append(self.mi_b9999)
 
         self.mi_b2306 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B2306", u"发送B2306请求生成退款文件", wx.ITEM_NORMAL)
@@ -272,7 +272,26 @@ class RootFrame(wx.Frame):
         self.mi_b2211 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B2211", u"发送B2211回写请求", wx.ITEM_NORMAL)
         self.menu_req.Append(self.mi_b2211)
 
-        self.menu_bar.Append(self.menu_req, u"Requests")
+        self.menu_bar.Append(self.menu_req, u"请求")
+
+        self.menu_settle = wx.Menu()
+        self.mi_rw = wx.MenuItem(self.menu_settle, wx.ID_ANY, u"行内转账流水生成", wx.EmptyString, wx.ITEM_NORMAL)
+        self.menu_settle.Append(self.mi_rw)
+
+        self.mi_transfer = wx.MenuItem(self.menu_settle, wx.ID_ANY, u"转账", wx.EmptyString, wx.ITEM_NORMAL)
+        self.menu_settle.Append(self.mi_transfer)
+
+        self.mi_confirm = wx.MenuItem(self.menu_settle, wx.ID_ANY, u"确认到账", wx.EmptyString, wx.ITEM_NORMAL)
+        self.menu_settle.Append(self.mi_confirm)
+
+        self.menu_bar.Append(self.menu_settle, u"清算")
+
+        self.menu_opa = wx.Menu()
+        self.mi_re_check = wx.MenuItem(self.menu_opa, wx.ID_ANY, u"重新对账...", u"删除某日期的已对账信息，以便进行该日的重新对账，请谨慎操作！",
+                                       wx.ITEM_NORMAL)
+        self.menu_opa.Append(self.mi_re_check)
+
+        self.menu_bar.Append(self.menu_opa, u"操作")
 
         self.SetMenuBar(self.menu_bar)
 
@@ -322,5 +341,6 @@ class RootFrame(wx.Frame):
 
     def on_mib2306(self, event):
         event.Skip()
+
 
 
