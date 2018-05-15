@@ -100,7 +100,10 @@ class FesRootFrame(RootFrame):
         self.cs_button.Disable()
 
     def on_cc_button(self, event):
-        event.Skip()
+        md = wx.MessageDialog(None, '确定发送B2211回写请求？', 'B2211', wx.YES_NO | wx.ICON_QUESTION)
+        if md.ShowModal() == wx.ID_YES:
+            self.fb.post_b2211()
+        md.Destroy()
 
     def reset_status(self):
         self.ca_static_text.SetLabel('未对账')
