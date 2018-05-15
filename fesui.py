@@ -241,6 +241,12 @@ class FesRootFrame(RootFrame):
             self.insert_into_gird(self.cc_grid, status_dict.get('confirmed'))
         self.Layout()
 
+    def on_mib9999(self, event):
+        event.Skip()
+
+    def on_mib2306(self, event):
+        event.Skip()
+
     @staticmethod
     def get_total_amt(data):
         if not len(data):

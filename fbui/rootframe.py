@@ -261,6 +261,17 @@ class RootFrame(wx.Frame):
 
         self.SetSizer(root_sizer)
         self.Layout()
+        self.menu_bar = wx.MenuBar(0)
+        self.menu_req = wx.Menu()
+        self.mi_b9999 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"MyMenuItem", wx.EmptyString, wx.ITEM_NORMAL)
+        self.menu_req.Append(self.mi_b9999)
+
+        self.mi_b2306 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"MyMenuItem", wx.EmptyString, wx.ITEM_NORMAL)
+        self.menu_req.Append(self.mi_b2306)
+
+        self.menu_bar.Append(self.menu_req, u"Requests")
+
+        self.SetMenuBar(self.menu_bar)
 
         self.Centre(wx.BOTH)
 
@@ -272,6 +283,8 @@ class RootFrame(wx.Frame):
         self.ca_detail_button.Bind(wx.EVT_BUTTON, self.on_ca_detail)
         self.cs_button.Bind(wx.EVT_BUTTON, self.on_cs_button)
         self.cc_button.Bind(wx.EVT_BUTTON, self.on_cc_button)
+        self.Bind(wx.EVT_MENU, self.on_mib9999, id=self.mi_b9999.GetId())
+        self.Bind(wx.EVT_MENU, self.on_mib2306, id=self.mi_b2306.GetId())
 
     def __del__(self):
         pass
@@ -296,6 +309,12 @@ class RootFrame(wx.Frame):
         event.Skip()
 
     def on_cc_button(self, event):
+        event.Skip()
+
+    def on_mib9999(self, event):
+        event.Skip()
+
+    def on_mib2306(self, event):
         event.Skip()
 
 
