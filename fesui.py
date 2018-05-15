@@ -78,11 +78,16 @@ class FesRootFrame(RootFrame):
         :param event:
         :return:
         """
-        re_check = self.fb.post_check_account(self.tran_date, self.settle_type, self.org_nick_name)
-        if re_check:  # 已经对过账，不能重复对账
-            wx.MessageBox('不能重复对账！')
-        self.get_and_show_status(self.total_amt)
-        self.ca_button.Disable()
+        md = wx.MessageDialog(None, '确定进行对账？', 'B2301对账', wx.YES_NO | wx.ICON_QUESTION)
+        if md.ShowModal() == wx.ID_YES:
+            re_check = self.fb.post_check_account(self.tran_date, self.settle_type, self.org_nick_name)
+            md.Destroy()
+            if re_check:  # 已经对过账，不能重复对账
+                wx.MessageBox('不能重复对账！')
+            self.get_and_show_status(self.total_amt)
+            self.ca_button.Disable()
+        else:
+            md.Destroy()
 
     def on_ca_detail(self, event):
         pass
@@ -93,11 +98,16 @@ class FesRootFrame(RootFrame):
         :param event:
         :return:
         """
-        re_settle = self.fb.post_check_settle(self.tran_date, self.settle_type, self.org_nick_name)
-        if re_settle:  # 已经清算过，不能重复清算
-            wx.MessageBox('不能重复清算！')
-        self.get_and_show_status(self.total_amt)
-        self.cs_button.Disable()
+        md = wx.MessageDialog(None, '确定进行清算？', 'B2304清算', wx.YES_NO | wx.ICON_QUESTION)
+        if md.ShowModal() == wx.ID_YES:
+            md.Destroy()
+            re_settle = self.fb.post_check_settle(self.tran_date, self.settle_type, self.org_nick_name)
+            if re_settle:  # 已经清算过，不能重复清算
+                wx.MessageBox('不能重复清算！')
+            self.get_and_show_status(self.total_amt)
+            self.cs_button.Disable()
+        else:
+            md.Destroy()
 
     def on_cc_button(self, event):
         md = wx.MessageDialog(None, '确定发送B2211回写请求？', 'B2211', wx.YES_NO | wx.ICON_QUESTION)

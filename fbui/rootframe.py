@@ -257,21 +257,26 @@ class RootFrame(wx.Frame):
         self.root_panel.SetSizer(inner_sizer)
         self.root_panel.Layout()
         inner_sizer.Fit(self.root_panel)
-        root_sizer.Add(self.root_panel, 1, wx.ALL | wx.EXPAND, 5)
+        root_sizer.Add(self.root_panel, 1, wx.ALL | wx.EXPAND, 0)
 
         self.SetSizer(root_sizer)
         self.Layout()
         self.menu_bar = wx.MenuBar(0)
         self.menu_req = wx.Menu()
-        self.mi_b9999 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B9999", wx.EmptyString, wx.ITEM_NORMAL)
+        self.mi_b9999 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B9999", u"发送B9999请求获取交易明细文件", wx.ITEM_NORMAL)
         self.menu_req.Append(self.mi_b9999)
 
-        self.mi_b2306 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B2306", wx.EmptyString, wx.ITEM_NORMAL)
+        self.mi_b2306 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B2306", u"发送B2306请求生成退款文件", wx.ITEM_NORMAL)
         self.menu_req.Append(self.mi_b2306)
+
+        self.mi_b2211 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B2211", u"发送B2211回写请求", wx.ITEM_NORMAL)
+        self.menu_req.Append(self.mi_b2211)
 
         self.menu_bar.Append(self.menu_req, u"Requests")
 
         self.SetMenuBar(self.menu_bar)
+
+        self.status_bar = self.CreateStatusBar(1, wx.STB_SIZEGRIP, wx.ID_ANY)
 
         self.Centre(wx.BOTH)
 
@@ -285,6 +290,7 @@ class RootFrame(wx.Frame):
         self.cc_button.Bind(wx.EVT_BUTTON, self.on_cc_button)
         self.Bind(wx.EVT_MENU, self.on_mib9999, id=self.mi_b9999.GetId())
         self.Bind(wx.EVT_MENU, self.on_mib2306, id=self.mi_b2306.GetId())
+        self.Bind(wx.EVT_MENU, self.on_cc_button, id=self.mi_b2211.GetId())
 
     def __del__(self):
         pass
