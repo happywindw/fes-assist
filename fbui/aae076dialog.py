@@ -20,24 +20,31 @@ class Aae076Dialog(wx.Dialog):
 
     def __init__(self, parent):
         wx.Dialog.__init__(self, parent, id=wx.ID_ANY, title=u"对账文件笔数和更新笔数不一致!", pos=wx.DefaultPosition,
-                           size=wx.Size(500, 300), style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
+                           size=wx.Size(600, 400), style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
         self.SetSizeHints(wx.Size(-1, -1), wx.DefaultSize)
 
-        ad_sizer = wx.BoxSizer(wx.VERTICAL)
+        ag_sizer = wx.GridSizer(3, 1, 0, 0)
 
-        info_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        ib_sizer = wx.GridSizer(0, 2, 0, 0)
 
         self.info_text = wx.StaticText(self, wx.ID_ANY, u"info", wx.DefaultPosition, wx.DefaultSize, 0)
         self.info_text.Wrap(-1)
-        info_sizer.Add(self.info_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.info_text.SetFont(wx.Font(14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑"))
+        self.info_text.SetForegroundColour(wx.Colour(255, 0, 0))
 
-        self.m_button8 = wx.Button(self, wx.ID_ANY, u"查询", wx.DefaultPosition, wx.DefaultSize, 0)
-        info_sizer.Add(self.m_button8, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        ib_sizer.Add(self.info_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        ad_sizer.Add(info_sizer, 1, wx.EXPAND, 5)
+        self.m_button8 = wx.Button(self, wx.ID_ANY, u"刷新", wx.DefaultPosition, wx.DefaultSize, 0)
+        ib_sizer.Add(self.m_button8, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        ag_sizer = wx.GridSizer(1, 1, 0, 0)
+        ag_sizer.Add(ib_sizer, 1, wx.ALIGN_CENTER | wx.EXPAND, 5)
+
+        gird_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        self.gird_text = wx.StaticText(self, wx.ID_ANY, u"双击行号查看详情", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.gird_text.Wrap(-1)
+        gird_sizer.Add(self.gird_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
         self.aae076_grid = wx.grid.Grid(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
 
@@ -66,16 +73,66 @@ class Aae076Dialog(wx.Dialog):
 
         # Cell Defaults
         self.aae076_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
-        ag_sizer.Add(self.aae076_grid, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        gird_sizer.Add(self.aae076_grid, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        ad_sizer.Add(ag_sizer, 1, wx.EXPAND, 5)
+        ag_sizer.Add(gird_sizer, 1, wx.ALIGN_CENTER | wx.EXPAND, 5)
 
-        self.SetSizer(ad_sizer)
+        detail_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        self.detail_text = wx.StaticText(self, wx.ID_ANY, u"双击行号删除记录", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.detail_text.Wrap(-1)
+        detail_sizer.Add(self.detail_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.detail_grid = wx.grid.Grid(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
+
+        # Grid
+        self.detail_grid.CreateGrid(1, 5)
+        self.detail_grid.EnableEditing(True)
+        self.detail_grid.EnableGridLines(True)
+        self.detail_grid.EnableDragGridSize(False)
+        self.detail_grid.SetMargins(0, 0)
+
+        # Columns
+        self.detail_grid.EnableDragColMove(False)
+        self.detail_grid.EnableDragColSize(True)
+        self.detail_grid.SetColLabelSize(30)
+        self.detail_grid.SetColLabelValue(0, u"AAE076")
+        self.detail_grid.SetColLabelValue(1, u"TRANS_STATUS")
+        self.detail_grid.SetColLabelValue(2, u"FUND_STATUS")
+        self.detail_grid.SetColLabelValue(3, u"ID")
+        self.detail_grid.SetColLabelValue(4, u"TOTAL_AMT")
+        self.detail_grid.SetColLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
+
+        # Rows
+        self.detail_grid.EnableDragRowSize(True)
+        self.detail_grid.SetRowLabelSize(80)
+        self.detail_grid.SetRowLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
+
+        # Label Appearance
+
+        # Cell Defaults
+        self.detail_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
+        detail_sizer.Add(self.detail_grid, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        ag_sizer.Add(detail_sizer, 1, wx.ALIGN_CENTER | wx.EXPAND, 5)
+
+        self.SetSizer(ag_sizer)
         self.Layout()
 
         self.Centre(wx.BOTH)
 
+        # Connect Events
+        self.m_button8.Bind(wx.EVT_BUTTON, self.on_get_repeat_aae076)
+        self.aae076_grid.Bind(wx.grid.EVT_GRID_LABEL_LEFT_DCLICK, self.on_show_details)
+
     def __del__(self):
         pass
+
+    # Virtual event handlers, overide them in your derived class
+    def on_get_repeat_aae076(self, event):
+        event.Skip()
+
+    def on_show_details(self, event):
+        event.Skip()
 
 

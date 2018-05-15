@@ -61,8 +61,11 @@ class FesBusi(object):
         else:            # 已对账
             return True, is_check
 
-    def deal_aae076(self):
-        pass
+    def get_repeat_aae076(self, tran_date, org_nick_name):
+        return self.db.get_repeat_aae076(tran_date, org_nick_name)
+
+    def get_re_aae076_detail(self, aae076):
+        return self.db.get_aae076_detail(aae076)
 
     def check_settle(self, tran_date, settle_type, org_nick_name):
         """

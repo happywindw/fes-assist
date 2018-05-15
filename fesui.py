@@ -8,15 +8,36 @@ from utils import insert_into_gird
 
 
 class FEesAae076Dialog(Aae076Dialog):
-    def __init__(self, parent, td, st, onn, ra):
+    def __init__(self, parent, fb, td, st, onn, ra):
         super().__init__(parent)
+        self.fb = fb
         self.tran_date = td
         self.settle_type = st
         self.org_nick_name = onn
         self.repeat_aae076 = ra
-        insert_into_gird(self.aae076_grid, ra)
+        self.aae076_detail = [('', '', '', '', '')]
+
+        self.info_text.SetLabel(self.tran_date + '   ' + self.org_nick_name)
+        self.fill_gird()
+
+    def fill_gird(self):
+        insert_into_gird(self.aae076_grid, self.repeat_aae076)
         self.aae076_grid.AutoSize()
+        insert_into_gird(self.detail_grid, self.aae076_detail)
+        self.detail_grid.AutoSize()
         self.Layout()
+
+    def on_get_repeat_aae076(self, event):
+        self.repeat_aae076 = self.fb.get_repeat_aae076(self.tran_date, self.org_nick_name)
+        self.aae076_detail = [('', '', '', '', '')]
+        self.fill_gird()
+
+    def on_show_details(self, event):
+        selected_rows = event.GetEventObject().SelectedRows
+        if selected_rows:
+            aae076 = self.repeat_aae076[selected_rows[0]][1]
+            self.aae076_detail = self.fb.get_re_aae076_detail(aae076)
+            self.fill_gird()
 
 
 class FesRootFrame(RootFrame):
@@ -87,7 +108,7 @@ class FesRootFrame(RootFrame):
             self.amt_text_ctrl.SetFocus()
             return
         s_date = self.trans_date_picker.GetValue().Format('%Y年%m月%d日   ')
-        self.top_trans_text.SetLabel(s_date + self.org_nick_name + '  总金额：' + str(self.total_amt))
+        self.top_trans_text.SetLabel(s_date + self.org_nick_name + '  总金额：' + str(self.total_amt) + '元')
         self.SetCursor(wx.Cursor(wx.CURSOR_ARROWWAIT))
         self.reset_status()
         self.status = self.get_and_show_status()
@@ -116,7 +137,7 @@ class FesRootFrame(RootFrame):
         elif self.btn_code_dict['ca_button'] == -1:
             pass
         elif self.btn_code_dict['ca_button'] == -2:
-            ad = FEesAae076Dialog(self, self.tran_date, self.settle_type,
+            ad = FEesAae076Dialog(self, self.fb, self.tran_date, self.settle_type,
                                   self.org_nick_name, self.status['repeat_aae076'])
             if ad.ShowModal() == wx.ID_CANCEL:
                 ad.Destroy()

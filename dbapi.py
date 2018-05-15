@@ -50,6 +50,16 @@ class DataBaseApi(object):
                         repeats.append((k, r[0], r[1]))
         return repeats
 
+    def get_aae076_detail(self, aae076):
+        """
+        查询指定aae076的详细信息
+        :param aae076:
+        :return:
+        """
+        res = self.session.execute("select t.aae076, t.trans_status, t.fund_status, t.id, t.total_amt from "
+                                   "fes_online_detail t where aae076='%s'" % aae076)
+        return res.fetchall()
+
     def delete_repeat_aae076(self, aae076):
         """
         删除重复的aae076记录
