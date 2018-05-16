@@ -306,7 +306,9 @@ class RootFrame(wx.Frame):
         self.ca_button.Bind(wx.EVT_BUTTON, self.on_ca_button)
         self.ca_detail_button.Bind(wx.EVT_BUTTON, self.on_ca_detail)
         self.cs_button.Bind(wx.EVT_BUTTON, self.on_cs_button)
+        self.cs_detail_button.Bind(wx.EVT_BUTTON, self.on_cs_detail)
         self.cc_button.Bind(wx.EVT_BUTTON, self.on_cc_button)
+        self.cc_detail_button.Bind(wx.EVT_BUTTON, self.on_cc_detail)
         self.Bind(wx.EVT_MENU, self.on_mib9999, id=self.mi_b9999.GetId())
         self.Bind(wx.EVT_MENU, self.on_mib2306, id=self.mi_b2306.GetId())
         self.Bind(wx.EVT_MENU, self.on_cc_button, id=self.mi_b2211.GetId())
@@ -333,7 +335,13 @@ class RootFrame(wx.Frame):
     def on_cs_button(self, event):
         event.Skip()
 
+    def on_cs_detail(self, event):
+        event.Skip()
+
     def on_cc_button(self, event):
+        event.Skip()
+
+    def on_cc_detail(self, event):
         event.Skip()
 
     def on_mib9999(self, event):

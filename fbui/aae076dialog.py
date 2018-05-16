@@ -20,36 +20,44 @@ class Aae076Dialog(wx.Dialog):
 
     def __init__(self, parent):
         wx.Dialog.__init__(self, parent, id=wx.ID_ANY, title=u"对账文件笔数和更新笔数不一致!", pos=wx.DefaultPosition,
-                           size=wx.Size(600, 400), style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
+                           size=wx.Size(750, 450), style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
 
         self.SetSizeHints(wx.Size(-1, -1), wx.DefaultSize)
 
-        ag_sizer = wx.GridSizer(3, 1, 0, 0)
+        ad_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        ib_sizer = wx.GridSizer(0, 2, 0, 0)
+        self.info_panel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(-1, -1), wx.TAB_TRAVERSAL)
+        self.info_panel.SetMaxSize(wx.Size(-1, 60))
 
-        self.info_text = wx.StaticText(self, wx.ID_ANY, u"info", wx.DefaultPosition, wx.DefaultSize, 0)
+        info_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.info_text = wx.StaticText(self.info_panel, wx.ID_ANY, u"info", wx.DefaultPosition, wx.DefaultSize, 0)
         self.info_text.Wrap(-1)
         self.info_text.SetFont(wx.Font(14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑"))
         self.info_text.SetForegroundColour(wx.Colour(255, 0, 0))
 
-        ib_sizer.Add(self.info_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        info_sizer.Add(self.info_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        self.m_button8 = wx.Button(self, wx.ID_ANY, u"刷新", wx.DefaultPosition, wx.DefaultSize, 0)
-        ib_sizer.Add(self.m_button8, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.refresh_button = wx.Button(self.info_panel, wx.ID_ANY, u"刷新", wx.DefaultPosition, wx.DefaultSize, 0)
+        info_sizer.Add(self.refresh_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        ag_sizer.Add(ib_sizer, 1, wx.ALIGN_CENTER | wx.EXPAND, 5)
+        self.info_panel.SetSizer(info_sizer)
+        self.info_panel.Layout()
+        info_sizer.Fit(self.info_panel)
+        ad_sizer.Add(self.info_panel, 1, wx.EXPAND | wx.ALL, 5)
 
-        gird_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.gird_panel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
+        gird_sizer = wx.StaticBoxSizer(wx.StaticBox(self.gird_panel, wx.ID_ANY, u"详情"), wx.VERTICAL)
 
-        self.gird_text = wx.StaticText(self, wx.ID_ANY, u"双击行号查看详情", wx.DefaultPosition, wx.DefaultSize, 0)
-        self.gird_text.Wrap(-1)
-        gird_sizer.Add(self.gird_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        self.aae076_text = wx.StaticText(gird_sizer.GetStaticBox(), wx.ID_ANY, u"双击行号查看详情", wx.DefaultPosition,
+                                         wx.DefaultSize, 0)
+        self.aae076_text.Wrap(-1)
+        gird_sizer.Add(self.aae076_text, 0, wx.ALL, 5)
 
-        self.aae076_grid = wx.grid.Grid(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
+        self.aae076_grid = wx.grid.Grid(gird_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
 
         # Grid
-        self.aae076_grid.CreateGrid(1, 3)
+        self.aae076_grid.CreateGrid(1, 5)
         self.aae076_grid.EnableEditing(True)
         self.aae076_grid.EnableGridLines(True)
         self.aae076_grid.EnableDragGridSize(False)
@@ -59,9 +67,11 @@ class Aae076Dialog(wx.Dialog):
         self.aae076_grid.EnableDragColMove(False)
         self.aae076_grid.EnableDragColSize(True)
         self.aae076_grid.SetColLabelSize(30)
-        self.aae076_grid.SetColLabelValue(0, u"ORG_NICK_NAME")
-        self.aae076_grid.SetColLabelValue(1, u"AAE076")
-        self.aae076_grid.SetColLabelValue(2, u"COUNT")
+        self.aae076_grid.SetColLabelValue(0, u"AAE076")
+        self.aae076_grid.SetColLabelValue(1, u"TRANS_STATUS")
+        self.aae076_grid.SetColLabelValue(2, u"FUND_STATUS")
+        self.aae076_grid.SetColLabelValue(3, u"ID")
+        self.aae076_grid.SetColLabelValue(4, u"TOTAL_AMT")
         self.aae076_grid.SetColLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
 
         # Rows
@@ -73,17 +83,14 @@ class Aae076Dialog(wx.Dialog):
 
         # Cell Defaults
         self.aae076_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
-        gird_sizer.Add(self.aae076_grid, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        gird_sizer.Add(self.aae076_grid, 0, wx.ALL, 5)
 
-        ag_sizer.Add(gird_sizer, 1, wx.ALIGN_CENTER | wx.EXPAND, 5)
-
-        detail_sizer = wx.BoxSizer(wx.VERTICAL)
-
-        self.detail_text = wx.StaticText(self, wx.ID_ANY, u"双击行号删除记录", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.detail_text = wx.StaticText(gird_sizer.GetStaticBox(), wx.ID_ANY, u"双击行号删除记录", wx.DefaultPosition,
+                                         wx.DefaultSize, 0)
         self.detail_text.Wrap(-1)
-        detail_sizer.Add(self.detail_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        gird_sizer.Add(self.detail_text, 0, wx.ALL, 5)
 
-        self.detail_grid = wx.grid.Grid(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
+        self.detail_grid = wx.grid.Grid(gird_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
 
         # Grid
         self.detail_grid.CreateGrid(1, 5)
@@ -112,17 +119,20 @@ class Aae076Dialog(wx.Dialog):
 
         # Cell Defaults
         self.detail_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
-        detail_sizer.Add(self.detail_grid, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+        gird_sizer.Add(self.detail_grid, 0, wx.ALL, 5)
 
-        ag_sizer.Add(detail_sizer, 1, wx.ALIGN_CENTER | wx.EXPAND, 5)
+        self.gird_panel.SetSizer(gird_sizer)
+        self.gird_panel.Layout()
+        gird_sizer.Fit(self.gird_panel)
+        ad_sizer.Add(self.gird_panel, 1, wx.EXPAND | wx.ALL, 5)
 
-        self.SetSizer(ag_sizer)
+        self.SetSizer(ad_sizer)
         self.Layout()
 
         self.Centre(wx.BOTH)
 
         # Connect Events
-        self.m_button8.Bind(wx.EVT_BUTTON, self.on_get_repeat_aae076)
+        self.refresh_button.Bind(wx.EVT_BUTTON, self.on_get_repeat_aae076)
         self.aae076_grid.Bind(wx.grid.EVT_GRID_LABEL_LEFT_DCLICK, self.on_show_details)
         self.detail_grid.Bind(wx.grid.EVT_GRID_LABEL_LEFT_DCLICK, self.on_delete_row)
 

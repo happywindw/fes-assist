@@ -17,7 +17,7 @@ class FEesAae076Dialog(Aae076Dialog):
         self.repeat_aae076 = ra
         self.aae076_detail = [('', '', '', '', '')]
 
-        self.info_text.SetLabel(self.tran_date + '   ' + self.org_nick_name)
+        self.info_text.SetLabel(self.tran_date + '   ' + self.org_nick_name + '   ')
         self.fill_gird()
 
     def fill_gird(self):
@@ -152,7 +152,14 @@ class FesRootFrame(RootFrame):
         if not self.btn_code_dict['ca_button']:
             return
         elif self.btn_code_dict['ca_button'] == -1:
-            pass
+            if self.status.get('unchecked'):
+                msg = '未对账金额多了： %.2f' % (float(self.status['unchecked'][0][0]) - self.total_amt)
+                wx.MessageBox(msg)
+            elif self.status.get('checked'):
+                msg = '对账金额多了： %.2f' % (float(self.status['checked'][0][0]) - self.total_amt)
+                wx.MessageBox(msg)
+            else:
+                wx.MessageBox('未知错误！')
         elif self.btn_code_dict['ca_button'] == -2:
             ad = FEesAae076Dialog(self, self.fb, self.tran_date, self.settle_type,
                                   self.org_nick_name, self.status['repeat_aae076'])
@@ -176,11 +183,27 @@ class FesRootFrame(RootFrame):
         else:
             md.Destroy()
 
+    def on_cs_detail(self, event):
+        if self.btn_code_dict['cs_button'] == -1:
+            if self.status.get('settled'):
+                msg = '清算金额多了： %.2f' % (self.get_total_amt(self.status.get('settled')) - self.total_amt)
+                wx.MessageBox(msg)
+            else:
+                wx.MessageBox('未知错误！')
+
     def on_cc_button(self, event):
         md = wx.MessageDialog(None, '确定发送B2211回写请求？', 'B2211', wx.YES_NO | wx.ICON_QUESTION)
         if md.ShowModal() == wx.ID_YES:
             self.fb.post_b2211()
         md.Destroy()
+
+    def on_cc_detail(self, event):
+        if self.btn_code_dict['cc_button'] == -1:
+            if self.status.get('confirmed'):
+                msg = '到账金额多了： %.2f' % (self.get_total_amt(self.status.get('confirmed')) - self.total_amt)
+                wx.MessageBox(msg)
+            else:
+                wx.MessageBox('未知错误！')
 
     def reset_status(self):
         self.ca_static_text.SetLabel('未对账')
@@ -258,6 +281,7 @@ class FesRootFrame(RootFrame):
                 self.ca_detail_text.SetForegroundColour(self.rgb_dict['Gold'])
                 self.ca_detail_text.Show()
                 self.ca_detail_button.Show()
+                self.btn_code_dict['ca_button'] = -1
             insert_into_gird(self.ca_grid, status_dict.get('checked'))
 
         if status_dict.get('unsettled'):
@@ -276,6 +300,7 @@ class FesRootFrame(RootFrame):
                 self.cs_detail_text.SetForegroundColour(self.rgb_dict['Gold'])
                 self.cs_detail_text.Show()
                 self.cs_detail_button.Show()
+                self.btn_code_dict['cs_button'] = -1
             insert_into_gird(self.cs_grid, status_dict.get('settled'))
 
         if status_dict.get('unconfirmed'):
@@ -317,6 +342,7 @@ class FesRootFrame(RootFrame):
                     self.cc_static_text.SetForegroundColour(self.rgb_dict['Gold'])
                     self.cc_detail_text.SetLabel('到账金额与总\n金额不一致！')
                     self.cc_detail_text.SetForegroundColour(self.rgb_dict['Gold'])
+                    self.btn_code_dict['cc_button'] = -1
             else:
                 self.cc_static_text.SetLabel('未到账')
                 self.cc_static_text.SetForegroundColour(self.rgb_dict['Red'])
@@ -342,5 +368,4 @@ class FesRootFrame(RootFrame):
         total = 0.0
         for row in data:
             total += float(row[0])
-        print('total: %f' % total)
         return total
