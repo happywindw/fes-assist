@@ -9,15 +9,14 @@ from utils import insert_into_gird
 
 
 class FesDelChkDialog(DelChkDialog):
-    def __init__(self, parent, fb):
+    def __init__(self, parent):
         super().__init__(parent)
-        self.fb = fb
 
     def on_ok(self, event):
-        event.Skip()
+        self.Close()
 
     def on_cancel(self, event):
-        event.Skip()
+        self.Close()
 
 
 class FesAae076Dialog(Aae076Dialog):
@@ -382,6 +381,9 @@ class FesRootFrame(RootFrame):
         :param event:
         :return:
         """
+        dlg = FesDelChkDialog(self)
+        ss = dlg.ShowModal()
+        print(ss)
         pass
 
     @staticmethod
