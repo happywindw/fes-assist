@@ -29,12 +29,14 @@ class FEesAae076Dialog(Aae076Dialog):
 
     def on_get_repeat_aae076(self, event):
         self.repeat_aae076 = self.fb.get_repeat_aae076(self.tran_date, self.org_nick_name)
+        if not self.repeat_aae076:
+            self.repeat_aae076 = [('', '', '')]
         self.aae076_detail = [('', '', '', '', '')]
         self.fill_gird()
 
     def on_show_details(self, event):
         selected_rows = event.GetEventObject().SelectedRows
-        if selected_rows:
+        if selected_rows and self.repeat_aae076:
             aae076 = self.repeat_aae076[selected_rows[0]][1]
             self.aae076_detail = self.fb.get_re_aae076_detail(aae076)
             self.fill_gird()

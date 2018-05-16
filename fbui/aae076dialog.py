@@ -57,7 +57,7 @@ class Aae076Dialog(wx.Dialog):
         self.aae076_grid = wx.grid.Grid(gird_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
 
         # Grid
-        self.aae076_grid.CreateGrid(1, 5)
+        self.aae076_grid.CreateGrid(1, 3)
         self.aae076_grid.EnableEditing(True)
         self.aae076_grid.EnableGridLines(True)
         self.aae076_grid.EnableDragGridSize(False)
@@ -67,11 +67,9 @@ class Aae076Dialog(wx.Dialog):
         self.aae076_grid.EnableDragColMove(False)
         self.aae076_grid.EnableDragColSize(True)
         self.aae076_grid.SetColLabelSize(30)
-        self.aae076_grid.SetColLabelValue(0, u"AAE076")
-        self.aae076_grid.SetColLabelValue(1, u"TRANS_STATUS")
-        self.aae076_grid.SetColLabelValue(2, u"FUND_STATUS")
-        self.aae076_grid.SetColLabelValue(3, u"ID")
-        self.aae076_grid.SetColLabelValue(4, u"TOTAL_AMT")
+        self.aae076_grid.SetColLabelValue(0, u"ORG_NICK_NAME")
+        self.aae076_grid.SetColLabelValue(1, u"AAE076")
+        self.aae076_grid.SetColLabelValue(2, u"COUNT")
         self.aae076_grid.SetColLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
 
         # Rows
