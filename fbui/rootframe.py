@@ -287,7 +287,7 @@ class RootFrame(wx.Frame):
         self.menu_bar.Append(self.menu_settle, u"清算")
 
         self.menu_opa = wx.Menu()
-        self.mi_re_check = wx.MenuItem(self.menu_opa, wx.ID_ANY, u"重新对账...", u"删除某日期的已对账信息，以便进行该日的重新对账，请谨慎操作！",
+        self.mi_re_check = wx.MenuItem(self.menu_opa, wx.ID_ANY, u"删除对账信息...", u"删除某日期的已对账信息，以便进行该日的重新对账，请谨慎操作！",
                                        wx.ITEM_NORMAL)
         self.menu_opa.Append(self.mi_re_check)
 
@@ -312,6 +312,7 @@ class RootFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_mib9999, id=self.mi_b9999.GetId())
         self.Bind(wx.EVT_MENU, self.on_mib2306, id=self.mi_b2306.GetId())
         self.Bind(wx.EVT_MENU, self.on_cc_button, id=self.mi_b2211.GetId())
+        self.Bind(wx.EVT_MENU, self.delete_check_info, id=self.mi_re_check.GetId())
 
     def __del__(self):
         pass
@@ -350,5 +351,7 @@ class RootFrame(wx.Frame):
     def on_mib2306(self, event):
         event.Skip()
 
+    def delete_check_info(self, event):
+        event.Skip()
 
 

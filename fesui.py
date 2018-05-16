@@ -2,12 +2,25 @@
 import wx
 
 from fbui.aae076dialog import Aae076Dialog
+from fbui.delchkdialog import DelChkDialog
 from fbui.rootframe import RootFrame
 from fesbusi import FesBusi
 from utils import insert_into_gird
 
 
-class FEesAae076Dialog(Aae076Dialog):
+class FesDelChkDialog(DelChkDialog):
+    def __init__(self, parent, fb):
+        super().__init__(parent)
+        self.fb = fb
+
+    def on_ok(self, event):
+        event.Skip()
+
+    def on_cancel(self, event):
+        event.Skip()
+
+
+class FesAae076Dialog(Aae076Dialog):
     def __init__(self, parent, fb, td, st, onn, ra):
         super().__init__(parent)
         self.fb = fb
@@ -163,8 +176,8 @@ class FesRootFrame(RootFrame):
             else:
                 wx.MessageBox('未知错误！')
         elif self.btn_code_dict['ca_button'] == -2:
-            ad = FEesAae076Dialog(self, self.fb, self.tran_date, self.settle_type,
-                                  self.org_nick_name, self.status['repeat_aae076'])
+            ad = FesAae076Dialog(self, self.fb, self.tran_date, self.settle_type,
+                                 self.org_nick_name, self.status['repeat_aae076'])
             if ad.ShowModal() == wx.ID_CANCEL:
                 ad.Destroy()
 
@@ -362,6 +375,14 @@ class FesRootFrame(RootFrame):
         if md.ShowModal() == wx.ID_YES:
             self.fb.post_b2306()
         md.Destroy()
+
+    def delete_check_info(self, event):
+        """
+        删除某日期的对账信息
+        :param event:
+        :return:
+        """
+        pass
 
     @staticmethod
     def get_total_amt(data):
