@@ -67,6 +67,9 @@ class FesBusi(object):
     def get_re_aae076_detail(self, aae076):
         return self.db.get_aae076_detail(aae076)
 
+    def delete_re_aae076(self, del_id):
+        return self.db.delete_repeat_aae076(del_id)
+
     def check_settle(self, tran_date, settle_type, org_nick_name):
         """
         查询清算状态

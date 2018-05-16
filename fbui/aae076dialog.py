@@ -124,6 +124,7 @@ class Aae076Dialog(wx.Dialog):
         # Connect Events
         self.m_button8.Bind(wx.EVT_BUTTON, self.on_get_repeat_aae076)
         self.aae076_grid.Bind(wx.grid.EVT_GRID_LABEL_LEFT_DCLICK, self.on_show_details)
+        self.detail_grid.Bind(wx.grid.EVT_GRID_LABEL_LEFT_DCLICK, self.on_delete_row)
 
     def __del__(self):
         pass
@@ -133,6 +134,9 @@ class Aae076Dialog(wx.Dialog):
         event.Skip()
 
     def on_show_details(self, event):
+        event.Skip()
+
+    def on_delete_row(self, event):
         event.Skip()
 
 

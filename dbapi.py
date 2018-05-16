@@ -60,23 +60,19 @@ class DataBaseApi(object):
                                    "fes_online_detail t where aae076='%s'" % aae076)
         return res.fetchall()
 
-    def delete_repeat_aae076(self, aae076):
+    def delete_repeat_aae076(self, delete_id):
         """
-        删除重复的aae076记录
-        :param aae076:
+        根据指定ID删除aae076重复的记录
+        :param delete_id:
         :return:
         """
-        repeats = self.session.execute("select id, settle_code from fes_online_detail t where aae076='%s'"
-                                       % aae076).fetchall()
-        if len(repeats) <= 1:
-            return
-        else:
-            delete_id = repeats[0][0]
-            for record in repeats:
-                if record[0] > delete_id:
-                    delete_id = record[0]
+        try:
             self.session.execute("delete from fes_online_detail where id='%s'" % delete_id)
             self.session.commit()
+        except Exception as e:
+            print(e)
+            return False
+        return True
 
     def get_diff(self, tran_date, org_nick_name):
         """

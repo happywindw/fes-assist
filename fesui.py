@@ -39,6 +39,23 @@ class FEesAae076Dialog(Aae076Dialog):
             self.aae076_detail = self.fb.get_re_aae076_detail(aae076)
             self.fill_gird()
 
+    def on_delete_row(self, event):
+        selected_rows = event.GetEventObject().SelectedRows
+        if not selected_rows:
+            return
+        row_id = self.aae076_detail[selected_rows[0]][3]
+        msg = "确定从FES_ONLINE_DETAIL表中删除ID为'%s'的记录？" % row_id
+        md = wx.MessageDialog(None, msg, '删除AAE076重复的记录', wx.YES_NO | wx.ICON_QUESTION)
+        if md.ShowModal() == wx.ID_YES:
+            if self.fb.delete_re_aae076(row_id):
+                md.Destroy()
+                wx.MessageBox('删除成功！')
+            else:
+                md.Destroy()
+                wx.MessageBox('删除异常，请查看日志！')
+        else:
+            md.Destroy()
+
 
 class FesRootFrame(RootFrame):
     def __init__(self, parent):
