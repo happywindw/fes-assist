@@ -311,10 +311,11 @@ class FesRootFrame(RootFrame):
             self.ca_static_text.SetLabel('已对账')
             if status_dict.get('check_diff'):
                 self.ca_detail_text.SetLabel('存在单边账!')
+                self.ca_static_text.SetForegroundColour(self.rgb_dict['Red'])
                 self.ca_detail_text.SetForegroundColour(self.rgb_dict['Red'])
                 self.ca_detail_text.Show()
                 self.ca_detail_button.Show()
-            if abs(self.get_total_amt(status_dict.get('checked')) - self.total_amt) < 0.001:
+            elif abs(self.get_total_amt(status_dict.get('checked')) - self.total_amt) < 0.001:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['LimeGreen'])
             else:
                 self.ca_static_text.SetForegroundColour(self.rgb_dict['Gold'])
