@@ -6,6 +6,7 @@ from fbui.b9999dialog import B9999Dialog
 from fbui.delchkdialog import DelChkDialog
 from fbui.rootframe import RootFrame
 from fesbusi import FesBusi
+from feslogs import logger
 from utils import insert_into_gird
 
 
@@ -280,7 +281,7 @@ class FesRootFrame(RootFrame):
         :return:
         """
         status_dict = self.fb.check_status(self.tran_date, self.settle_type, self.org_nick_name)
-        print(status_dict)
+        logger.debug('[%s][%s]: %s' % (self.tran_date, self.org_nick_name, status_dict))
         if status_dict.get('no_business'):
             self.ca_static_text.Enable()
             self.ca_static_text.SetLabel('无业务')

@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
+from feslogs import logger
 from settings import pro_db, bank_dict
 
 
@@ -67,10 +68,12 @@ class DataBaseApi(object):
         :return:
         """
         try:
-            self.session.execute("delete from fes_online_detail where id='%s'" % delete_id)
+            sql = "delete from fes_online_detail where id='%s'" % delete_id
+            logger.debug('Execute SQL: %s' % sql)
+            self.session.execute(sql)
             self.session.commit()
         except Exception as e:
-            print(e)
+            logger.error('Exception: %s' % e)
             return False
         return True
 

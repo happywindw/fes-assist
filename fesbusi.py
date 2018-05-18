@@ -17,7 +17,6 @@ class FesBusi(object):
             ra = self.db.get_repeat_aae076(tran_date, org_nick_name)
             if ra:  # 存在重复的aae076
                 status_dict['repeat_aae076'] = ra
-                print(ra[0])
             status_dict['unchecked'] = [(check_info[0], check_info[1])]
             return status_dict
         else:                                # 已对帐
@@ -124,4 +123,6 @@ class FesBusi(object):
         FesB2211().post()
 
     def post_b9999(self, bc, sd, ed):
-        FesB9999(bc, sd, ed).post()
+        f9 = FesB9999(bc, sd, ed)
+        f9.post()
+        f9.download_and_open_file()

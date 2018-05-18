@@ -3,27 +3,21 @@ import datetime
 import json
 import os
 import requests
+from feslogs import logger
 from settings import post_urls
 from utils import sftp_download, get_desktop
-
-
-# data = {
-#   "trans_code": "2301",
-#   "check_date": "20180502",
-#   "org_nick_name": "GHPOS",
-#   "task_en_name": "CHECKFILE"
-# }
-#
-# rep = requests.post('http://10.200.24.47:6080/fes-service/busi-api/2301', data=json.dumps(data))
-# print(rep.text)
 
 
 class FesRequest(object):
     def __init__(self, trans_code):
         self.trans_code = trans_code
+        self.data = {}
 
     def post(self):
-        pass
+        logger.info('Post request B%s to %s with msg: %s' %
+                    (self.trans_code, post_urls[self.trans_code], self.data))
+        resp = requests.post(post_urls[self.trans_code], data=json.dumps(self.data))
+        logger.info('Receive response msg: %s' % resp.text)
 
 
 # 联机交易对账请求
@@ -37,10 +31,6 @@ class FesB2301(FesRequest):
             "task_en_name": "CHECKFILE"
         }
 
-    def post(self):
-        resp = requests.post(post_urls['B2301'], data=json.dumps(self.data))
-        print(resp.text)
-
 
 # 联机交易清算请求
 class FesB2304(FesRequest):
@@ -52,10 +42,6 @@ class FesB2304(FesRequest):
             "org_nick_name": org_nick_name
         }
 
-    def post(self):
-        resp = requests.post(post_urls['B2304'], data=json.dumps(self.data))
-        print(resp.text)
-
 
 # 联机交易生成退款文件请求
 class FesB2306(FesRequest):
@@ -63,20 +49,12 @@ class FesB2306(FesRequest):
         super().__init__('2306')
         self.data = {"trans_code": "2306"}
 
-    def post(self):
-        resp = requests.post(post_urls['B2306'], data=json.dumps(self.data))
-        print(resp.text)
-
 
 # 联机交易回写请求
 class FesB2211(FesRequest):
     def __init__(self):
         super().__init__('2211')
         self.data = {"trans_code": "2211"}
-
-    def post(self):
-        resp = requests.post(post_urls['B2211'], data=json.dumps(self.data))
-        print(resp.text)
 
 
 # 过渡户交易明细文件下载
@@ -98,11 +76,6 @@ class FesB9999(FesRequest):
             "start_date": start_date,
             "end_date": end_date
         }
-
-    def post(self):
-        resp = requests.post(post_urls['B9999'], data=json.dumps(self.data))
-        print(resp.text)
-        self.download_and_open_file()
 
     def download_and_open_file(self):
         file_name = '%s_%s_%s.txt' % (self.acct_no[self.bank_code], self.start_date, self.end_date)

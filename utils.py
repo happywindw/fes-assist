@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import winreg
 import paramiko
-from feslogs import FesLogger
+from feslogs import logger
 from settings import sftp_ser
-
-logger = FesLogger().get_logger()
 
 
 def insert_into_gird(grid, data, row_labels=None, col_labels=None):
@@ -68,5 +66,6 @@ def get_desktop():
     获取windows系统桌面路径
     :return:
     """
-    key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders')
+    key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,
+                         r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders')
     return winreg.QueryValueEx(key, "Desktop")[0]

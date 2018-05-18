@@ -22,3 +22,6 @@ class FesLogger(object):
 
     def get_logger(self):
         return self.logger
+
+
+logger = FesLogger().get_logger()
