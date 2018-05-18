@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import paramiko
+from settings import sftp_ser
 
 
 def insert_into_gird(grid, data, row_labels=None, col_labels=None):
@@ -39,3 +41,14 @@ def insert_into_gird(grid, data, row_labels=None, col_labels=None):
         for i, ele in enumerate(row):
             grid.SetCellValue(j, i, str(ele))
     grid.AutoSize()
+
+
+def sftp_download(remote, local):
+    sf = paramiko.Transport((sftp_ser['host'], sftp_ser['port']))
+    sf.connect(username=sftp_ser['username'], password=sftp_ser['password'])
+    sftp = paramiko.SFTPClient.from_transport(sf)
+    try:
+        sftp.get(remote, local)  # 下载文件
+    except Exception as e:
+        print('download exception:', e)
+    sf.close()

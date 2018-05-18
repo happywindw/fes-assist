@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+import datetime
 import json
+import os
 import requests
 from settings import post_urls
+from utils import sftp_download
 
 # data = {
 #   "trans_code": "2301",
@@ -74,3 +77,38 @@ class FesB2211(FesRequest):
         resp = requests.post(post_urls['B2211'], data=json.dumps(self.data))
         print(resp.text)
 
+
+# 过渡户交易明细文件下载
+class FesB9999(FesRequest):
+    def __init__(self, bank_code, start_date, end_date):
+        super().__init__('9999')
+        self.bank_code = bank_code
+        self.start_date = start_date
+        self.end_date = end_date
+        self.acct_no = {
+            '102': '3002010011200508811',
+            '105': '65001610200052513865'
+        }
+        self.data = {
+            "trans_code": "9999",
+            "bank_code": self.bank_code,
+            "trancode": "102",
+            "acct_no": self.acct_no[bank_code],
+            "start_date": start_date,
+            "end_date": end_date
+        }
+
+    def post(self):
+        resp = requests.post(post_urls['B9999'], data=json.dumps(self.data))
+        print(resp.text)
+        self.download_and_open_file()
+
+    def download_and_open_file(self):
+        file_name = '%s_%s_%s' % (self.acct_no[self.bank_code], self.start_date, self.end_date)
+        remote_path = '/home/fes/busi/batchdownload/%s/' % datetime.date.today().strftime('%Y%m%d')
+        remote = remote_path + file_name
+        local = 'C:/Users/Public/Desktop/' + file_name
+        if os.path.exists(local):
+            os.remove(local)
+        sftp_download(remote, local)
+        os.startfile(local)
