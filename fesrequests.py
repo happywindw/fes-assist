@@ -104,11 +104,12 @@ class FesB9999(FesRequest):
         self.download_and_open_file()
 
     def download_and_open_file(self):
-        file_name = '%s_%s_%s' % (self.acct_no[self.bank_code], self.start_date, self.end_date)
+        file_name = '%s_%s_%s.txt' % (self.acct_no[self.bank_code], self.start_date, self.end_date)
         remote_path = '/home/fes/busi/batchdownload/%s/' % datetime.date.today().strftime('%Y%m%d')
         remote = remote_path + file_name
-        local = 'C:/Users/Public/Desktop/' + file_name
+        local = 'C:/Users/Louis/Desktop' + file_name
         if os.path.exists(local):
             os.remove(local)
         sftp_download(remote, local)
+        print('Success download file: %s' % local)
         os.startfile(local)

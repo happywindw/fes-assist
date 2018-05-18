@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from dbapi import DataBaseApi
-from fesrequests import FesB2301, FesB2304, FesB2306, FesB2211
+from fesrequests import FesB2301, FesB2304, FesB2306, FesB2211, FesB9999
 
 
 class FesBusi(object):
@@ -122,3 +122,6 @@ class FesBusi(object):
 
     def post_b2211(self):
         FesB2211().post()
+
+    def post_b9999(self, bc, sd, ed):
+        FesB9999(bc, sd, ed).post()

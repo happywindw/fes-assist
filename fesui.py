@@ -2,6 +2,7 @@
 import wx
 
 from fbui.aae076dialog import Aae076Dialog
+from fbui.b9999dialog import B9999Dialog
 from fbui.delchkdialog import DelChkDialog
 from fbui.rootframe import RootFrame
 from fesbusi import FesBusi
@@ -17,6 +18,30 @@ class FesDelChkDialog(DelChkDialog):
 
     def on_cancel(self, event):
         self.Close()
+
+
+class FesB9999Dialog(B9999Dialog):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.bank_dict = {
+            0: '102',
+            1: '105'
+        }
+        self.bank_code = '102'
+        self.start_date = ''
+        self.end_date = ''
+
+    def on_ok(self, event):
+        self.bank_code = self.bank_dict[self.bank_choice.GetCurrentSelection()]
+        self.start_date = self.sd_date_picker.GetValue().Format('%Y%m%d')
+        self.end_date = self.ed_date_picker.GetValue().Format('%Y%m%d')
+        if self.start_date > self.end_date:
+            wx.MessageBox('开始日期不能大于结束日期！')
+            return
+        self.EndModal(wx.ID_OK)
+
+    def on_cancel(self, event):
+        self.EndModal(wx.ID_CANCEL)
 
 
 class FesAae076Dialog(Aae076Dialog):
@@ -142,7 +167,7 @@ class FesRootFrame(RootFrame):
             return
         s_date = self.trans_date_picker.GetValue().Format('%Y年%m月%d日   ')
         self.top_trans_text.SetLabel(s_date + self.org_nick_name + '  总金额：' + str(self.total_amt) + '元')
-        self.SetCursor(wx.Cursor(wx.CURSOR_ARROWWAIT))
+        self.SetCursor(wx.Cursor(wx.CURSOR_WAIT))
         self.reset_status()
         self.status = self.get_and_show_status()
         self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
@@ -369,7 +394,12 @@ class FesRootFrame(RootFrame):
         return status_dict
 
     def on_mib9999(self, event):
-        event.Skip()
+        dlg = FesB9999Dialog(self)
+        if dlg.ShowModal() == wx.ID_OK:
+            self.SetCursor(wx.Cursor(wx.CURSOR_WAIT))
+            self.fb.post_b9999(dlg.bank_code, dlg.start_date, dlg.end_date)
+            self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
+        dlg.Destroy()
 
     def on_mib2306(self, event):
         md = wx.MessageDialog(None, '确定发送B2306请求生成退款文件？', 'B2306', wx.YES_NO | wx.ICON_QUESTION)
