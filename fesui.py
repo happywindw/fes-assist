@@ -14,10 +14,10 @@ class FesDelChkDialog(DelChkDialog):
         super().__init__(parent)
 
     def on_ok(self, event):
-        self.Close()
+        self.EndModal(wx.ID_OK)
 
     def on_cancel(self, event):
-        self.Close()
+        self.EndModal(wx.ID_CANCEL)
 
 
 class FesB9999Dialog(B9999Dialog):
@@ -414,9 +414,9 @@ class FesRootFrame(RootFrame):
         :return:
         """
         dlg = FesDelChkDialog(self)
-        ss = dlg.ShowModal()
-        print(ss)
-        pass
+        if dlg.ShowModal() == wx.ID_OK:
+            print('功能未实现。。。')
+        dlg.Destroy()
 
     @staticmethod
     def get_total_amt(data):
