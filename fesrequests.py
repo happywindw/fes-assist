@@ -4,7 +4,8 @@ import json
 import os
 import requests
 from settings import post_urls
-from utils import sftp_download
+from utils import sftp_download, get_desktop
+
 
 # data = {
 #   "trans_code": "2301",
@@ -107,9 +108,8 @@ class FesB9999(FesRequest):
         file_name = '%s_%s_%s.txt' % (self.acct_no[self.bank_code], self.start_date, self.end_date)
         remote_path = '/home/fes/busi/batchdownload/%s/' % datetime.date.today().strftime('%Y%m%d')
         remote = remote_path + file_name
-        local = 'C:/Users/Louis/Desktop' + file_name
+        local = get_desktop() + '/' + file_name
         if os.path.exists(local):
             os.remove(local)
-        sftp_download(remote, local)
-        print('Success download file: %s' % local)
-        os.startfile(local)
+        if sftp_download(remote, local):
+            os.startfile(local)

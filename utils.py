@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
+import winreg
 import paramiko
+from feslogs import FesLogger
 from settings import sftp_ser
+
+logger = FesLogger().get_logger()
 
 
 def insert_into_gird(grid, data, row_labels=None, col_labels=None):
@@ -47,8 +51,22 @@ def sftp_download(remote, local):
     sf = paramiko.Transport((sftp_ser['host'], sftp_ser['port']))
     sf.connect(username=sftp_ser['username'], password=sftp_ser['password'])
     sftp = paramiko.SFTPClient.from_transport(sf)
+    flag = False
     try:
+        logger.info('Start to download remote file: [%s]%s' % (sftp_ser['host'], remote))
         sftp.get(remote, local)  # 下载文件
+        logger.info('Success download file: %s' % local)
+        flag = True
     except Exception as e:
-        print('download exception:', e)
+        logger.error('Download exception:' % e)
     sf.close()
+    return flag
+
+
+def get_desktop():
+    """
+    获取windows系统桌面路径
+    :return:
+    """
+    key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders')
+    return winreg.QueryValueEx(key, "Desktop")[0]

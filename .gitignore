@@ -105,3 +105,6 @@ ENV/
 
 # setting file
 settings.py
+
+# log file
+/logs
