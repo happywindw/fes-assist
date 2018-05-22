@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import wx
 from wx.lib.pubsub import pub
 
@@ -148,7 +149,6 @@ class FesRootFrame(RootFrame):
             dlg = wx.MessageDialog(None, '成功下载文件%s\n是否立即打开？' % result[1], '文件下载完成',
                                    wx.YES_NO | wx.ICON_QUESTION)
             if dlg.ShowModal() == wx.ID_YES:
-                import os
                 os.startfile(result[1])
         else:
             self.status_bar.SetStatusText(result[1], 1)
@@ -432,6 +432,12 @@ class FesRootFrame(RootFrame):
         if dlg.ShowModal() == wx.ID_OK:
             print('功能未实现。。。')
         dlg.Destroy()
+
+    def on_open_log(self, event):
+        os.startfile('%s/logs/%s_fes_assist_log.txt' % (os.getcwd(), self.tran_date))
+
+    def on_open_log_dir(self, event):
+        os.system("start explorer %s\\logs" % os.getcwd())
 
     @staticmethod
     def get_total_amt(data):

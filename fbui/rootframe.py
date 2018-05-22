@@ -293,6 +293,15 @@ class RootFrame(wx.Frame):
 
         self.menu_bar.Append(self.menu_opa, u"操作")
 
+        self.menu_help = wx.Menu()
+        self.mi_open_log = wx.MenuItem(self.menu_help, wx.ID_ANY, u"查看日志", u"打开当前使用的日志文件", wx.ITEM_NORMAL)
+        self.menu_help.Append(self.mi_open_log)
+
+        self.mi_log_dir = wx.MenuItem(self.menu_help, wx.ID_ANY, u"打开日志文件夹", u"打开存放日志的文件夹", wx.ITEM_NORMAL)
+        self.menu_help.Append(self.mi_log_dir)
+
+        self.menu_bar.Append(self.menu_help, u"帮助")
+
         self.SetMenuBar(self.menu_bar)
 
         self.status_bar = self.CreateStatusBar(2, wx.STB_SIZEGRIP, wx.ID_ANY)
@@ -313,6 +322,8 @@ class RootFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_mib2306, id=self.mi_b2306.GetId())
         self.Bind(wx.EVT_MENU, self.on_cc_button, id=self.mi_b2211.GetId())
         self.Bind(wx.EVT_MENU, self.delete_check_info, id=self.mi_re_check.GetId())
+        self.Bind(wx.EVT_MENU, self.on_open_log, id=self.mi_open_log.GetId())
+        self.Bind(wx.EVT_MENU, self.on_open_log_dir, id=self.mi_log_dir.GetId())
 
     def __del__(self):
         pass
@@ -352,6 +363,12 @@ class RootFrame(wx.Frame):
         event.Skip()
 
     def delete_check_info(self, event):
+        event.Skip()
+
+    def on_open_log(self, event):
+        event.Skip()
+
+    def on_open_log_dir(self, event):
         event.Skip()
 
 
