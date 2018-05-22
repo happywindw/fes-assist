@@ -49,16 +49,16 @@ def sftp_download(remote, local):
     sf = paramiko.Transport((sftp_ser['host'], sftp_ser['port']))
     sf.connect(username=sftp_ser['username'], password=sftp_ser['password'])
     sftp = paramiko.SFTPClient.from_transport(sf)
-    flag = False
     try:
         logger.info('Start to download remote file: [%s]%s' % (sftp_ser['host'], remote))
         sftp.get(remote, local)  # 下载文件
         logger.info('Success download file: %s' % local)
-        flag = True
+        msg = (True, local)
     except Exception as e:
         logger.error('Download exception:' % e)
+        msg = (False, '下载失败：%s' % e)
     sf.close()
-    return flag
+    return msg
 
 
 def get_desktop():

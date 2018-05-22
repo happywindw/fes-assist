@@ -3,6 +3,7 @@ import datetime
 import json
 import os
 import requests
+import shutil
 from feslogs import logger
 from settings import post_urls
 from utils import sftp_download, get_desktop
@@ -14,8 +15,7 @@ class FesRequest(object):
         self.data = {}
 
     def post(self):
-        logger.info('Post request B%s to %s with msg: %s' %
-                    (self.trans_code, post_urls[self.trans_code], self.data))
+        logger.info('Post request B%s to %s with msg: %s' % (self.trans_code, post_urls[self.trans_code], self.data))
         resp = requests.post(post_urls[self.trans_code], data=json.dumps(self.data))
         logger.info('Receive response msg: %s' % resp.text)
 
@@ -77,12 +77,23 @@ class FesB9999(FesRequest):
             "end_date": end_date
         }
 
-    def download_and_open_file(self):
+    def download_file(self):
         file_name = '%s_%s_%s.txt' % (self.acct_no[self.bank_code], self.start_date, self.end_date)
         remote_path = '/home/fes/busi/batchdownload/%s/' % datetime.date.today().strftime('%Y%m%d')
         remote = remote_path + file_name
-        local = get_desktop() + '/' + file_name
+        # 下载文件到临时目录下
+        if not os.path.exists('./temp'):
+            os.mkdir('./temp')
+        local = './temp/' + file_name
         if os.path.exists(local):
             os.remove(local)
-        if sftp_download(remote, local):
-            os.startfile(local)
+        msg = sftp_download(remote, local)
+        if msg[0]:
+            # 将下载的文件复制到桌面
+            desktop = get_desktop() + '/' + file_name
+            if os.path.exists(desktop):
+                os.remove(desktop)
+            shutil.copy(local, desktop)
+            return True, desktop
+        else:
+            return msg

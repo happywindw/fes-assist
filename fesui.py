@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import wx
+from wx.lib.pubsub import pub
 
 from fbui.aae076dialog import Aae076Dialog
 from fbui.b9999dialog import B9999Dialog
@@ -7,6 +8,7 @@ from fbui.delchkdialog import DelChkDialog
 from fbui.rootframe import RootFrame
 from fesbusi import FesBusi
 from feslogs import logger
+from threds import B9999Thread
 from utils import insert_into_gird
 
 
@@ -138,6 +140,18 @@ class FesRootFrame(RootFrame):
         self.top_trans_text.SetLabel('FES')
         self.top_trans_text.SetForegroundColour(self.rgb_dict['Blue'])
         self.reset_status()
+        pub.subscribe(self.finish_download, 'download')
+
+    def finish_download(self, result):
+        if result[0]:
+            self.status_bar.SetStatusText('', 1)
+            dlg = wx.MessageDialog(None, '成功下载文件%s\n是否立即打开？' % result[1], '文件下载完成',
+                                   wx.YES_NO | wx.ICON_QUESTION)
+            if dlg.ShowModal() == wx.ID_YES:
+                import os
+                os.startfile(result[1])
+        else:
+            self.status_bar.SetStatusText(result[1], 1)
 
     def on_choose_tran_type(self, event):
         s, o = self.trans_choice_dict.get(self.trans_choice.GetCurrentSelection())
@@ -398,9 +412,8 @@ class FesRootFrame(RootFrame):
     def on_mib9999(self, event):
         dlg = FesB9999Dialog(self)
         if dlg.ShowModal() == wx.ID_OK:
-            self.SetCursor(wx.Cursor(wx.CURSOR_WAIT))
-            self.fb.post_b9999(dlg.bank_code, dlg.start_date, dlg.end_date)
-            self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
+            self.status_bar.SetStatusText('正在下载交易明细文件...', 1)
+            B9999Thread(dlg.bank_code, dlg.start_date, dlg.end_date)
         dlg.Destroy()
 
     def on_mib2306(self, event):

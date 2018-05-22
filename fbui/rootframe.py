@@ -295,7 +295,7 @@ class RootFrame(wx.Frame):
 
         self.SetMenuBar(self.menu_bar)
 
-        self.status_bar = self.CreateStatusBar(1, wx.STB_SIZEGRIP, wx.ID_ANY)
+        self.status_bar = self.CreateStatusBar(2, wx.STB_SIZEGRIP, wx.ID_ANY)
 
         self.Centre(wx.BOTH)
 
