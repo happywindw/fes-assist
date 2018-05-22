@@ -90,7 +90,7 @@ class FesB9999(FesRequest):
         msg = sftp_download(remote, local)
         if msg[0]:
             # 将下载的文件复制到桌面
-            desktop = get_desktop() + '/' + file_name
+            desktop = os.path.join(get_desktop(), file_name)
             if os.path.exists(desktop):
                 os.remove(desktop)
             shutil.copy(local, desktop)
