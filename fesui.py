@@ -9,7 +9,7 @@ from fbui.delchkdialog import DelChkDialog
 from fbui.rootframe import RootFrame
 from fesbusi import FesBusi
 from feslogs import logger
-from threds import B9999Thread
+from uithreads import ExceptionThread, B9999Thread
 from utils import insert_into_gird
 
 
@@ -90,12 +90,13 @@ class FesAae076Dialog(Aae076Dialog):
         msg = "确定从FES_ONLINE_DETAIL表中删除ID为'%s'的记录？" % row_id
         md = wx.MessageDialog(None, msg, '删除AAE076重复的记录', wx.YES_NO | wx.ICON_QUESTION)
         if md.ShowModal() == wx.ID_YES:
-            if self.fb.delete_re_aae076(row_id):
+            result = self.fb.delete_re_aae076(row_id)
+            if not result:
                 md.Destroy()
                 wx.MessageBox('删除成功！')
             else:
                 md.Destroy()
-                wx.MessageBox('删除异常，请查看日志！')
+                wx.MessageBox('删除异常：%s' % result[0][1])
         else:
             md.Destroy()
 
@@ -105,7 +106,9 @@ class FesRootFrame(RootFrame):
         super().__init__(parent)
         icon = wx.Icon('resource/fa.ico', wx.BITMAP_TYPE_ICO)
         self.SetIcon(icon)
-        self.fb = FesBusi()
+        self.et = ExceptionThread()
+        self.fb = FesBusi(self.et)
+
         self.rgb_dict = {
             'Black': (0, 0, 0),
             'White': (255, 255, 255),
@@ -142,6 +145,7 @@ class FesRootFrame(RootFrame):
         self.top_trans_text.SetForegroundColour(self.rgb_dict['Blue'])
         self.reset_status()
         pub.subscribe(self.finish_download, 'download')
+        pub.subscribe(self.show_exception, 'exception')
 
     def finish_download(self, result):
         if result[0]:
@@ -152,6 +156,10 @@ class FesRootFrame(RootFrame):
                 os.startfile(result[1])
         else:
             self.status_bar.SetStatusText(result[1], 1)
+
+    def show_exception(self, e):
+        print('got me????')
+        wx.MessageBox('Exception: %s' % e)
 
     def on_choose_tran_type(self, event):
         s, o = self.trans_choice_dict.get(self.trans_choice.GetCurrentSelection())

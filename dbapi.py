@@ -15,8 +15,26 @@ class DataBaseApi(object):
     # 创建DBSession类型:
     DBSession = sessionmaker(bind=engine)
 
-    def __init__(self):
-        self.session = self.DBSession()
+    def __init__(self, exception_thread):
+        try:
+            self.session = self.DBSession()
+            self.et = exception_thread
+        except Exception as e:
+            logger.error('Database Error: %s' % e)
+
+    def reconnect(self):
+        try:
+            self.session.close()
+        except Exception as e:
+            logger.error('Session close exception: %s' % e)
+            return False
+
+        try:
+            self.session = self.DBSession()
+            return True
+        except Exception as e:
+            logger.error('Create session error: %s' % e)
+            return False
 
     def account_check(self, tran_date, settle_type, is_check, org_nick_name):
         """
@@ -27,10 +45,15 @@ class DataBaseApi(object):
         :param org_nick_name:
         :return:
         """
-        res = self.session.execute("select sum(total_amt), count(1) from fes_online_detail where settle_type='%s' "
-                                   "and tran_date='%s' and is_check='%s' and org_nick_name='%s' group by tran_date"
-                                   % (settle_type, tran_date, is_check, org_nick_name))
-        return res.fetchone()
+        try:
+            res = self.session.execute("select sum(total_amt), count(1) from fes_online_detail where settle_type='%s' "
+                                       "and tran_date='%s' and is_check='%s' and org_nick_name='%s' group by tran_date"
+                                       % (settle_type, tran_date, is_check, org_nick_name))
+            return res.fetchone()
+        except Exception as e:
+            logger.error('Error: %s' % e)
+            self.et.show_exception(e)
+            return []
 
     def get_repeat_aae076(self, tran_date, org_nick_name):
         """
@@ -39,17 +62,22 @@ class DataBaseApi(object):
         :param org_nick_name:
         :return:
         """
-        bank_code = bank_dict.get(org_nick_name)[1]
-        repeats = []
-        for k, v in bank_dict.items():
-            if bank_code == v[1]:
-                res = self.session.execute("select aae076,count(1) from fes_online_detail where settle_type='%s' and "
-                                           "tran_date='%s' and is_check='0' and org_nick_name='%s' group by aae076 "
-                                           "having count(1)>1" % (v[0], tran_date, k)).fetchall()
-                if res:
-                    for r in res:
-                        repeats.append((k, r[0], r[1]))
-        return repeats
+        try:
+            bank_code = bank_dict.get(org_nick_name)[1]
+            repeats = []
+            for k, v in bank_dict.items():
+                if bank_code == v[1]:
+                    res = self.session.execute("select aae076,count(1) from fes_online_detail where settle_type='%s' "
+                                               "and tran_date='%s' and is_check='0' and org_nick_name='%s' group by "
+                                               "aae076 having count(1)>1" % (v[0], tran_date, k)).fetchall()
+                    if res:
+                        for r in res:
+                            repeats.append((k, r[0], r[1]))
+            return repeats
+        except Exception as e:
+            logger.error('Error: %s' % e)
+            self.et.show_exception(e)
+            return []
 
     def get_aae076_detail(self, aae076):
         """
@@ -57,9 +85,14 @@ class DataBaseApi(object):
         :param aae076:
         :return:
         """
-        res = self.session.execute("select t.aae076, t.trans_status, t.fund_status, t.id, t.total_amt from "
-                                   "fes_online_detail t where aae076='%s'" % aae076)
-        return res.fetchall()
+        try:
+            res = self.session.execute("select t.aae076, t.trans_status, t.fund_status, t.id, t.total_amt from "
+                                       "fes_online_detail t where aae076='%s'" % aae076)
+            return res.fetchall()
+        except Exception as e:
+            logger.error('Error: %s' % e)
+            self.et.show_exception(e)
+            return []
 
     def delete_repeat_aae076(self, delete_id):
         """
@@ -73,9 +106,9 @@ class DataBaseApi(object):
             self.session.execute(sql)
             self.session.commit()
         except Exception as e:
-            logger.error('Exception: %s' % e)
-            return False
-        return True
+            logger.error('Error: %s' % e)
+            return [('exception', e)]
+        return False
 
     def get_diff(self, tran_date, org_nick_name):
         """
@@ -84,9 +117,14 @@ class DataBaseApi(object):
         :param org_nick_name:
         :return:
         """
-        res = self.session.execute("select * from fes_check_file_diff t where t.org_nick_name='%s' and "
-                                   "t.check_date='%s'" % (org_nick_name, tran_date))
-        return res.fetchall()
+        try:
+            res = self.session.execute("select * from fes_check_file_diff t where t.org_nick_name='%s' and "
+                                       "t.check_date='%s'" % (org_nick_name, tran_date))
+            return res.fetchall()
+        except Exception as e:
+            logger.error('Error: %s' % e)
+            self.et.show_exception(e)
+            return []
 
     def get_settle_date(self, tran_date, settle_type, org_nick_name):
         """
@@ -96,10 +134,15 @@ class DataBaseApi(object):
         :param org_nick_name:
         :return:
         """
-        res = self.session.execute("select t.settle_date from fes_online_detail t where t.settle_type='%s' and "
-                                   "t.tran_date='%s' and t.is_check='1' and org_nick_name='%s' and rownum<=1" %
-                                   (settle_type, tran_date, org_nick_name))
-        return res.fetchone()[0]
+        try:
+            res = self.session.execute("select t.settle_date from fes_online_detail t where t.settle_type='%s' and "
+                                       "t.tran_date='%s' and t.is_check='1' and org_nick_name='%s' and rownum<=1" %
+                                       (settle_type, tran_date, org_nick_name))
+            return res.fetchone()[0]
+        except Exception as e:
+            logger.error('Error: %s' % e)
+            self.et.show_exception(e)
+            return ''
 
     def settle_check(self, tran_date, settle_type, org_nick_name):
         """
@@ -109,11 +152,16 @@ class DataBaseApi(object):
         :param org_nick_name:
         :return:
         """
-        res = self.session.execute("select t.settle_amt, t.is_confirmed, t.settle_status, t.current_direction from "
-                                   "fes_settle_log t where t.settle_log_id in (select settle_log_id from "
-                                   "fes_online_detail where settle_type='%s' and tran_date='%s' and  is_check='1' and "
-                                   "org_nick_name='%s')" % (settle_type, tran_date, org_nick_name))
-        return res.fetchall()
+        try:
+            res = self.session.execute("select t.settle_amt, t.is_confirmed, t.settle_status, t.current_direction from "
+                                       "fes_settle_log t where t.settle_log_id in (select settle_log_id from "
+                                       "fes_online_detail where settle_type='%s' and tran_date='%s' and  is_check='1' "
+                                       "and org_nick_name='%s')" % (settle_type, tran_date, org_nick_name))
+            return res.fetchall()
+        except Exception as e:
+            logger.error('Error: %s' % e)
+            self.et.show_exception(e)
+            return []
 
     def confirm_check(self, tran_date, settle_type, org_nick_name):
         """
@@ -123,13 +171,18 @@ class DataBaseApi(object):
         :param org_nick_name:
         :return:
         """
-        res = self.session.execute("select t.tran_amt, t.status, t.is_check, t.current_direction from fes_fund_log t "
-                                   "where settle_log_id in (select settle_log_id from fes_settle_log  where "
-                                   "settle_log_id in (select settle_log_id from fes_online_detail where "
-                                   "settle_type='%s' and tran_date='%s' and is_check='1' and org_nick_name='%s'))"
-                                   % (settle_type, tran_date, org_nick_name))
-        return res.fetchall()
+        try:
+            res = self.session.execute("select t.tran_amt, t.status, t.is_check, t.current_direction from fes_fund_log "
+                                       "t where settle_log_id in (select settle_log_id from fes_settle_log  where "
+                                       "settle_log_id in (select settle_log_id from fes_online_detail where "
+                                       "settle_type='%s' and tran_date='%s' and is_check='1' and org_nick_name='%s'))"
+                                       % (settle_type, tran_date, org_nick_name))
+            return res.fetchall()
+        except Exception as e:
+            logger.error('Error: %s' % e)
+            self.et.show_exception(e)
+            return []
 
     def execute_sql(self, sql):
-        return self.session.execute(sql)
+        return self.session.execute(sql).fetchall()
 

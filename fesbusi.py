@@ -4,8 +4,9 @@ from fesrequests import FesB2301, FesB2304, FesB2306, FesB2211, FesB9999
 
 
 class FesBusi(object):
-    def __init__(self):
-        self.db = DataBaseApi()
+    def __init__(self, exception_thread):
+        self.et = exception_thread
+        self.db = DataBaseApi(self.et)
 
     def check_status(self, tran_date, settle_type, org_nick_name):
         status_dict = {}
@@ -112,6 +113,8 @@ class FesBusi(object):
             return True
 
         settle_date = self.db.get_settle_date(tran_date, settle_type, org_nick_name)
+        if not settle_date:
+            return
         req_2304 = FesB2304(settle_date, org_nick_name)
         req_2304.post()
         return False
