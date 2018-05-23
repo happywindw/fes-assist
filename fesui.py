@@ -104,7 +104,7 @@ class FesAae076Dialog(Aae076Dialog):
 class FesRootFrame(RootFrame):
     def __init__(self, parent):
         super().__init__(parent)
-        icon = wx.Icon('resource/fa.ico', wx.BITMAP_TYPE_ICO)
+        icon = wx.Icon('resource/fes.ico', wx.BITMAP_TYPE_ICO)
         self.SetIcon(icon)
         self.et = ExceptionThread()
         self.fb = FesBusi(self.et)
