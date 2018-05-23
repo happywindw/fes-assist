@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import os
 import wx
 from wx.lib.pubsub import pub
@@ -451,17 +452,26 @@ class FesRootFrame(RootFrame):
         dlg.Destroy()
 
     def on_open_log(self, event):
-        os.startfile('%s/logs/%s_fes_assist_log.txt' % (os.getcwd(), self.tran_date))
+        log_file = ('%s/logs/%s_fes_assist_log.txt' %
+                    (os.getcwd(), datetime.date.today().strftime('%Y%m%d'))).replace('\\', '/')
+        if os.path.exists(log_file):
+            os.startfile(log_file)
+        else:
+            wx.MessageBox('打开失败，找不到文件：%s' % log_file)
 
     def on_open_log_dir(self, event):
-        os.system("start explorer %s\\logs" % os.getcwd())
+        log_dir = "%s\\logs" % os.getcwd()
+        if os.path.exists(log_dir):
+            os.system('start explorer ' + log_dir)
+        else:
+            wx.MessageBox('打开失败，找不到文件夹：%s' % log_dir)
 
     def on_reconnect(self, event):
         if self.fb.reconnect():
             self.status_bar.SetStatusText('', 1)
             wx.MessageBox('连接数据库成功')
         else:
-            print('fail.......')
+            wx.MessageBox('连接失败！')
 
     @staticmethod
     def get_total_amt(data):

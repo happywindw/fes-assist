@@ -300,7 +300,7 @@ class RootFrame(wx.Frame):
         self.mi_log_dir = wx.MenuItem(self.menu_help, wx.ID_ANY, u"打开日志文件夹", u"打开存放日志的文件夹", wx.ITEM_NORMAL)
         self.menu_help.Append(self.mi_log_dir)
 
-        self.mi_reconnect = wx.MenuItem(self.menu_help, wx.ID_ANY, u"连接数据库", wx.EmptyString, wx.ITEM_NORMAL)
+        self.mi_reconnect = wx.MenuItem(self.menu_help, wx.ID_ANY, u"连接数据库", u"重新建立数据库连接", wx.ITEM_NORMAL)
         self.menu_help.Append(self.mi_reconnect)
 
         self.menu_bar.Append(self.menu_help, u"帮助")
