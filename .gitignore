@@ -108,3 +108,9 @@ settings.py
 
 # log file
 /logs
+
+# resource file
+/resource
+
+# temp file
+/temp
