@@ -8,6 +8,9 @@ class FesBusi(object):
         self.et = exception_thread
         self.db = DataBaseApi(self.et)
 
+    def reconnect(self):
+        return self.db.reconnect()
+
     def check_status(self, tran_date, settle_type, org_nick_name):
         status_dict = {}
         # 对帐查询

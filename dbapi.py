@@ -33,7 +33,7 @@ class DataBaseApi(object):
             self.session = self.DBSession()
             return True
         except Exception as e:
-            logger.error('Create session error: %s' % e)
+            logger.error('Create session exception: %s' % e)
             return False
 
     def account_check(self, tran_date, settle_type, is_check, org_nick_name):
@@ -51,8 +51,8 @@ class DataBaseApi(object):
                                        % (settle_type, tran_date, is_check, org_nick_name))
             return res.fetchone()
         except Exception as e:
-            logger.error('Error: %s' % e)
-            self.et.show_exception(e)
+            logger.error('DatabaseError: %s' % e)
+            self.et.show_exception(('DatabaseError', e))
             return []
 
     def get_repeat_aae076(self, tran_date, org_nick_name):
@@ -75,7 +75,7 @@ class DataBaseApi(object):
                             repeats.append((k, r[0], r[1]))
             return repeats
         except Exception as e:
-            logger.error('Error: %s' % e)
+            self.et.show_exception(('DatabaseError', e))
             self.et.show_exception(e)
             return []
 
@@ -90,7 +90,7 @@ class DataBaseApi(object):
                                        "fes_online_detail t where aae076='%s'" % aae076)
             return res.fetchall()
         except Exception as e:
-            logger.error('Error: %s' % e)
+            self.et.show_exception(('DatabaseError', e))
             self.et.show_exception(e)
             return []
 
@@ -106,7 +106,7 @@ class DataBaseApi(object):
             self.session.execute(sql)
             self.session.commit()
         except Exception as e:
-            logger.error('Error: %s' % e)
+            self.et.show_exception(('DatabaseError', e))
             return [('exception', e)]
         return False
 
@@ -122,7 +122,7 @@ class DataBaseApi(object):
                                        "t.check_date='%s'" % (org_nick_name, tran_date))
             return res.fetchall()
         except Exception as e:
-            logger.error('Error: %s' % e)
+            self.et.show_exception(('DatabaseError', e))
             self.et.show_exception(e)
             return []
 
@@ -140,7 +140,7 @@ class DataBaseApi(object):
                                        (settle_type, tran_date, org_nick_name))
             return res.fetchone()[0]
         except Exception as e:
-            logger.error('Error: %s' % e)
+            self.et.show_exception(('DatabaseError', e))
             self.et.show_exception(e)
             return ''
 
@@ -159,7 +159,7 @@ class DataBaseApi(object):
                                        "and org_nick_name='%s')" % (settle_type, tran_date, org_nick_name))
             return res.fetchall()
         except Exception as e:
-            logger.error('Error: %s' % e)
+            self.et.show_exception(('DatabaseError', e))
             self.et.show_exception(e)
             return []
 
@@ -179,7 +179,7 @@ class DataBaseApi(object):
                                        % (settle_type, tran_date, org_nick_name))
             return res.fetchall()
         except Exception as e:
-            logger.error('Error: %s' % e)
+            self.et.show_exception(('DatabaseError', e))
             self.et.show_exception(e)
             return []
 

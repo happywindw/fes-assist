@@ -300,6 +300,9 @@ class RootFrame(wx.Frame):
         self.mi_log_dir = wx.MenuItem(self.menu_help, wx.ID_ANY, u"打开日志文件夹", u"打开存放日志的文件夹", wx.ITEM_NORMAL)
         self.menu_help.Append(self.mi_log_dir)
 
+        self.mi_reconnect = wx.MenuItem(self.menu_help, wx.ID_ANY, u"连接数据库", wx.EmptyString, wx.ITEM_NORMAL)
+        self.menu_help.Append(self.mi_reconnect)
+
         self.menu_bar.Append(self.menu_help, u"帮助")
 
         self.SetMenuBar(self.menu_bar)
@@ -324,6 +327,7 @@ class RootFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.delete_check_info, id=self.mi_re_check.GetId())
         self.Bind(wx.EVT_MENU, self.on_open_log, id=self.mi_open_log.GetId())
         self.Bind(wx.EVT_MENU, self.on_open_log_dir, id=self.mi_log_dir.GetId())
+        self.Bind(wx.EVT_MENU, self.on_reconnect, id=self.mi_reconnect.GetId())
 
     def __del__(self):
         pass
@@ -369,6 +373,9 @@ class RootFrame(wx.Frame):
         event.Skip()
 
     def on_open_log_dir(self, event):
+        event.Skip()
+
+    def on_reconnect(self, event):
         event.Skip()
 
 

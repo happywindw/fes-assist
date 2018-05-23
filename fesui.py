@@ -146,6 +146,14 @@ class FesRootFrame(RootFrame):
         self.reset_status()
         pub.subscribe(self.finish_download, 'download')
         pub.subscribe(self.show_exception, 'exception')
+        self.Bind(wx.EVT_CLOSE, self.on_close)
+        logger.info('Start program...')
+
+    def on_close(self, event):
+        if self.et.is_alive():
+            self.et.exit_thread()
+        logger.info('Exit program.')
+        event.Skip()
 
     def finish_download(self, result):
         if result[0]:
@@ -157,9 +165,10 @@ class FesRootFrame(RootFrame):
         else:
             self.status_bar.SetStatusText(result[1], 1)
 
-    def show_exception(self, e):
-        print('got me????')
-        wx.MessageBox('Exception: %s' % e)
+    def show_exception(self, exception):
+        if exception[0] == 'DatabaseError':
+            self.status_bar.SetStatusText('数据库错误，请重连', 1)
+        wx.MessageBox('%s: %s' % exception)
 
     def on_choose_tran_type(self, event):
         s, o = self.trans_choice_dict.get(self.trans_choice.GetCurrentSelection())
@@ -446,6 +455,13 @@ class FesRootFrame(RootFrame):
 
     def on_open_log_dir(self, event):
         os.system("start explorer %s\\logs" % os.getcwd())
+
+    def on_reconnect(self, event):
+        if self.fb.reconnect():
+            self.status_bar.SetStatusText('', 1)
+            wx.MessageBox('连接数据库成功')
+        else:
+            print('fail.......')
 
     @staticmethod
     def get_total_amt(data):

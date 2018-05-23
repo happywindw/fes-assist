@@ -8,18 +8,24 @@ from fesbusi import FesBusi
 class ExceptionThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-        self.exception = ''
+        self.flag = True
+        self.exception = ()
         self.event = threading.Event()
         self.start()
 
     def run(self):
-        while True:
+        while self.flag:
             self.event.wait()
-            wx.CallAfter(pub.sendMessage, 'exception', e=self.exception)
-            self.event.clear()
+            if self.flag:
+                wx.CallAfter(pub.sendMessage, 'exception', exception=self.exception)
+                self.event.clear()
 
     def show_exception(self, e):
         self.exception = e
+        self.event.set()
+
+    def exit_thread(self):
+        self.flag = False
         self.event.set()
 
 
