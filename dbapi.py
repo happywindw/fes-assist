@@ -87,7 +87,7 @@ class DataBaseApi(object):
         """
         try:
             res = self.session.execute("select t.aae076, t.trans_status, t.fund_status, t.id, t.total_amt from "
-                                       "fes_online_detail t where aae076='%s'" % aae076)
+                                       "fes_online_detail t where aae076='%s' order by t.id" % aae076)
             return res.fetchall()
         except Exception as e:
             self.et.show_exception(('DatabaseError', e))
