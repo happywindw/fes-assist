@@ -87,8 +87,9 @@ class FesB9999(FesRequest):
         local = './temp/' + file_name
         if os.path.exists(local):
             os.remove(local)
-        msg = sftp_download(remote, local)
-        if msg[0]:
+
+        result = sftp_download(remote, local)
+        if result[0]:
             # 将下载的文件复制到桌面
             desktop = os.path.join(get_desktop(), file_name)
             if os.path.exists(desktop):
@@ -96,4 +97,4 @@ class FesB9999(FesRequest):
             shutil.copy(local, desktop)
             return True, desktop
         else:
-            return msg
+            return result

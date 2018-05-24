@@ -55,7 +55,7 @@ def sftp_download(remote, local):
         logger.info('Success download file: %s' % local)
         msg = (True, local)
     except Exception as e:
-        logger.error('Download exception:' % e)
+        logger.error('Download exception: %s' % e)
         msg = (False, '下载失败：%s' % e)
     sf.close()
     return msg

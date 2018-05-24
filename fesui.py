@@ -157,6 +157,7 @@ class FesRootFrame(RootFrame):
         event.Skip()
 
     def finish_download(self, result):
+        print(result)
         if result[0]:
             self.status_bar.SetStatusText('', 1)
             dlg = wx.MessageDialog(None, '成功下载文件%s\n是否立即打开？' % result[1], '文件下载完成',
@@ -164,7 +165,8 @@ class FesRootFrame(RootFrame):
             if dlg.ShowModal() == wx.ID_YES:
                 os.startfile(result[1])
         else:
-            self.status_bar.SetStatusText(result[1], 1)
+            self.status_bar.SetStatusText('', 1)
+            wx.MessageBox(result[1])
 
     def show_exception(self, exception):
         if exception[0] == 'DatabaseError':
