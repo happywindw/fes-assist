@@ -263,13 +263,13 @@ class RootFrame(wx.Frame):
         self.Layout()
         self.menu_bar = wx.MenuBar(0)
         self.menu_req = wx.Menu()
-        self.mi_b9999 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B9999...", u"发送B9999请求获取交易明细文件", wx.ITEM_NORMAL)
+        self.mi_b9999 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"获取过渡户交易明细...", u"发送B9999请求下载过渡户交易明细文件", wx.ITEM_NORMAL)
         self.menu_req.Append(self.mi_b9999)
 
-        self.mi_b2306 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B2306", u"发送B2306请求生成退款文件", wx.ITEM_NORMAL)
+        self.mi_b2306 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"B2306 生成退款文件", u"发送B2306请求生成联机业务的退款文件", wx.ITEM_NORMAL)
         self.menu_req.Append(self.mi_b2306)
 
-        self.mi_b2211 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"发送B2211", u"发送B2211回写请求", wx.ITEM_NORMAL)
+        self.mi_b2211 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"B2211 联机业务回写", u"发送B2211请求回写三版联机业务", wx.ITEM_NORMAL)
         self.menu_req.Append(self.mi_b2211)
 
         self.menu_bar.Append(self.menu_req, u"请求")
