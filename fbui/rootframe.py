@@ -269,7 +269,8 @@ class RootFrame(wx.Frame):
         self.mi_b2306 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"B2306 生成退款文件", u"发送B2306请求生成联机业务的退款文件", wx.ITEM_NORMAL)
         self.menu_req.Append(self.mi_b2306)
 
-        self.mi_b2211 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"B2211 联机业务回写", u"发送B2211请求回写三版联机业务", wx.ITEM_NORMAL)
+        self.mi_b2211 = wx.MenuItem(self.menu_req, wx.ID_ANY, u"B2211 联机业务回写", u"发送B2211请求将三版联机业务回写给业务系统",
+                                    wx.ITEM_NORMAL)
         self.menu_req.Append(self.mi_b2211)
 
         self.menu_bar.Append(self.menu_req, u"请求")

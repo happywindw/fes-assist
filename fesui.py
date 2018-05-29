@@ -28,16 +28,18 @@ class FesDelChkDialog(DelChkDialog):
 class FesB9999Dialog(B9999Dialog):
     def __init__(self, parent):
         super().__init__(parent)
-        self.bank_dict = {
-            0: '102',
-            1: '105'
+        self.account_dict = {  # 过渡户账号字典
+            0: ('102', '3002010011200508811'),
+            1: ('102', '3002010011920101028'),
+            2: ('105', '65001610200052513865'),
+            3: ('105', '65001610200052513858')
         }
-        self.bank_code = '102'
+        self.choose_num = 0
         self.start_date = ''
         self.end_date = ''
 
     def on_ok(self, event):
-        self.bank_code = self.bank_dict[self.bank_choice.GetCurrentSelection()]
+        self.choose_num = self.bank_choice.GetCurrentSelection()
         self.start_date = self.sd_date_picker.GetValue().Format('%Y%m%d')
         self.end_date = self.ed_date_picker.GetValue().Format('%Y%m%d')
         if self.start_date > self.end_date:
@@ -432,8 +434,8 @@ class FesRootFrame(RootFrame):
     def on_mib9999(self, event):
         dlg = FesB9999Dialog(self)
         if dlg.ShowModal() == wx.ID_OK:
-            self.status_bar.SetStatusText('正在下载交易明细文件...', 1)
-            B9999Thread(dlg.bank_code, dlg.start_date, dlg.end_date)
+            self.status_bar.SetStatusText('正在后台下载过渡户交易明细文件...', 1)
+            B9999Thread(dlg.account_dict[dlg.choose_num], dlg.start_date, dlg.end_date)
         dlg.Destroy()
 
     def on_mib2306(self, event):

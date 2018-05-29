@@ -4,6 +4,7 @@ import json
 import os
 import requests
 import shutil
+
 from feslogs import logger
 from settings import post_urls
 from utils import sftp_download, get_desktop
@@ -15,9 +16,16 @@ class FesRequest(object):
         self.data = {}
 
     def post(self):
-        logger.info('Post request B%s to %s with msg: %s' % (self.trans_code, post_urls[self.trans_code], self.data))
-        resp = requests.post(post_urls[self.trans_code], data=json.dumps(self.data))
-        logger.info('Receive response msg: %s' % resp.text)
+        try:
+            logger.info('Post request B%s to %s with msg: %s' % (self.trans_code, post_urls[self.trans_code], self.data))
+            resp = requests.post(post_urls[self.trans_code], data=json.dumps(self.data))
+            logger.info('Received response msg: %s' % resp.text)
+            if resp.status_code != 200:
+                pass
+        except Exception as e:
+            logger.error('Exception: %s' % e)
+            raise
+        return json.loads(resp.content, encoding=resp.encoding)
 
 
 # 联机交易对账请求
@@ -59,9 +67,9 @@ class FesB2211(FesRequest):
 
 # 过渡户交易明细文件下载
 class FesB9999(FesRequest):
-    def __init__(self, bank_code, start_date, end_date):
+    def __init__(self, bank_account, start_date, end_date):
         super().__init__('9999')
-        self.bank_code = bank_code
+        self.bank_account = bank_account
         self.start_date = start_date
         self.end_date = end_date
         self.acct_no = {
@@ -70,15 +78,15 @@ class FesB9999(FesRequest):
         }
         self.data = {
             "trans_code": "9999",
-            "bank_code": self.bank_code,
+            "bank_code": self.bank_account[0],
             "trancode": "102",
-            "acct_no": self.acct_no[bank_code],
+            "acct_no": self.bank_account[1],
             "start_date": start_date,
             "end_date": end_date
         }
 
     def download_file(self):
-        file_name = '%s_%s_%s.txt' % (self.acct_no[self.bank_code], self.start_date, self.end_date)
+        file_name = '%s_%s_%s.txt' % (self.bank_account[1], self.start_date, self.end_date)
         remote_path = '/home/fes/busi/batchdownload/%s/' % datetime.date.today().strftime('%Y%m%d')
         remote = remote_path + file_name
         # 下载文件到临时目录下

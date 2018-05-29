@@ -30,13 +30,13 @@ class ExceptionThread(threading.Thread):
 
 
 class B9999Thread(threading.Thread):
-    def __init__(self, bank_code, start_date, end_date):
+    def __init__(self, bank_account, start_date, end_date):
         threading.Thread.__init__(self)
-        self.bank_code = bank_code
+        self.bank_account = bank_account
         self.start_date = start_date
         self.end_date = end_date
         self.start()
 
     def run(self):
-        result = FesBusi.post_b9999(self.bank_code, self.start_date, self.end_date)
+        result = FesBusi.post_b9999(self.bank_account, self.start_date, self.end_date)
         wx.CallAfter(pub.sendMessage, 'download', result=result)

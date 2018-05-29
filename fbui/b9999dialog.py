@@ -35,7 +35,7 @@ class B9999Dialog(wx.Dialog):
         bank_choiceChoices = [u"工商银行代收：3002010011200508811", u"工商银行代发：3002010011920101028",
                               u"建设银行代收：65001610200052513865", u"建设银行代发：65001610200052513858"]
         self.bank_choice = wx.Choice(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, bank_choiceChoices, 0)
-        self.bank_choice.SetSelection(1)
+        self.bank_choice.SetSelection(0)
         bank_sizer.Add(self.bank_choice, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
         main_sizer.Add(bank_sizer, 1, wx.EXPAND, 5)

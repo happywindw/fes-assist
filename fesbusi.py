@@ -129,7 +129,7 @@ class FesBusi(object):
         FesB2211().post()
 
     @staticmethod
-    def post_b9999(bc, sd, ed):
-        f9 = FesB9999(bc, sd, ed)
+    def post_b9999(ba, sd, ed):
+        f9 = FesB9999(ba, sd, ed)
         f9.post()
         return f9.download_file()
