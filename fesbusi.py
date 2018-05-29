@@ -4,14 +4,26 @@ from fesrequests import FesB2301, FesB2304, FesB2306, FesB2211, FesB9999
 
 
 class FesBusi(object):
+    """FES业务处理类"""
     def __init__(self, exception_thread):
         self.et = exception_thread
         self.db = DataBaseApi(self.et)
 
     def reconnect(self):
+        """
+        重新建立数据库链接
+        :return:
+        """
         return self.db.reconnect()
 
     def check_status(self, tran_date, settle_type, org_nick_name):
+        """
+        查询指定日期指定业务的状态
+        :param tran_date:
+        :param settle_type:
+        :param org_nick_name:
+        :return:
+        """
         status_dict = {}
         # 对帐查询
         is_check, check_info = self.check_account(tran_date, settle_type, org_nick_name)
