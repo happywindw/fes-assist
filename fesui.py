@@ -455,6 +455,9 @@ class FesRootFrame(RootFrame):
             print('功能未实现。。。')
         dlg.Destroy()
 
+    def on_get_daily(self, event):
+        event.Skip()
+
     def on_open_log(self, event):
         log_file = ('%s/logs/%s_fes_assist_log.txt' %
                     (os.getcwd(), datetime.date.today().strftime('%Y%m%d'))).replace('\\', '/')

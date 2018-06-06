@@ -292,6 +292,9 @@ class RootFrame(wx.Frame):
                                        wx.ITEM_NORMAL)
         self.menu_opa.Append(self.mi_re_check)
 
+        self.mi_daily = wx.MenuItem(self.menu_opa, wx.ID_ANY, u"MyMenuItem", wx.EmptyString, wx.ITEM_NORMAL)
+        self.menu_opa.Append(self.mi_daily)
+
         self.menu_bar.Append(self.menu_opa, u"操作")
 
         self.menu_help = wx.Menu()
@@ -326,6 +329,7 @@ class RootFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_mib2306, id=self.mi_b2306.GetId())
         self.Bind(wx.EVT_MENU, self.on_cc_button, id=self.mi_b2211.GetId())
         self.Bind(wx.EVT_MENU, self.delete_check_info, id=self.mi_re_check.GetId())
+        self.Bind(wx.EVT_MENU, self.on_get_daily, id=self.mi_daily.GetId())
         self.Bind(wx.EVT_MENU, self.on_open_log, id=self.mi_open_log.GetId())
         self.Bind(wx.EVT_MENU, self.on_open_log_dir, id=self.mi_log_dir.GetId())
         self.Bind(wx.EVT_MENU, self.on_reconnect, id=self.mi_reconnect.GetId())
@@ -368,6 +372,9 @@ class RootFrame(wx.Frame):
         event.Skip()
 
     def delete_check_info(self, event):
+        event.Skip()
+
+    def on_get_daily(self, event):
         event.Skip()
 
     def on_open_log(self, event):
