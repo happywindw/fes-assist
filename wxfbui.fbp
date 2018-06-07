@@ -4458,7 +4458,7 @@
                                 <property name="caption"></property>
                                 <property name="caption_visible">1</property>
                                 <property name="center_pane">0</property>
-                                <property name="choices">&quot;工商银行代收：3002010011200508811&quot; &quot;工商银行代发：3002010011920101028&quot; &quot;建设银行代收：65001610200052513865&quot; &quot;建设银行代发：65001610200052513858&quot;</property>
+                                <property name="choices"></property>
                                 <property name="close_button">1</property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
@@ -4478,7 +4478,7 @@
                                 <property name="maximum_size"></property>
                                 <property name="min_size"></property>
                                 <property name="minimize_button">0</property>
-                                <property name="minimum_size"></property>
+                                <property name="minimum_size">280,-1</property>
                                 <property name="moveable">1</property>
                                 <property name="name">bank_choice</property>
                                 <property name="pane_border">1</property>
