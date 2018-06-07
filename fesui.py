@@ -10,6 +10,7 @@ from fbui.delchkdialog import DelChkDialog
 from fbui.rootframe import RootFrame
 from fesbusi import FesBusi
 from feslogs import logger
+from settings import TRANS_ACCOUNT
 from uithreads import ExceptionThread, B9999Thread
 from utils import insert_into_gird
 
@@ -28,21 +29,29 @@ class FesDelChkDialog(DelChkDialog):
 class FesB9999Dialog(B9999Dialog):
     def __init__(self, parent):
         super().__init__(parent)
-        self.account_dict = {  # 过渡户账号字典
-            0: ('102', '3002010011200508811'),
-            1: ('102', '3002010011920101028'),
-            2: ('105', '65001610200052513865'),
-            3: ('105', '65001610200052513858')
-        }
-        self.choose_num = 0
-        self.start_date = ''
-        self.end_date = ''
+        choice_list = []
+        for k, v in TRANS_ACCOUNT.items():
+            choice_list.append(k + ':' + v[1])
+        self.bank_choice.SetItems(choice_list)
+        self.bank_choice.SetSelection(0)
+
+        self.__bank_account = ()
+        self.__start_date = ''
+        self.__end_date = ''
+
+    def get_selection(self):
+        return self.__bank_account, self.__start_date, self.__end_date
 
     def on_ok(self, event):
-        self.choose_num = self.bank_choice.GetCurrentSelection()
-        self.start_date = self.sd_date_picker.GetValue().Format('%Y%m%d')
-        self.end_date = self.ed_date_picker.GetValue().Format('%Y%m%d')
-        if self.start_date > self.end_date:
+        if self.bank_choice.GetCurrentSelection() == -1:
+            wx.MessageBox('请选择一个银行过渡户！')
+            return
+        else:
+            self.__bank_account = TRANS_ACCOUNT[self.bank_choice.GetString(
+                self.bank_choice.GetCurrentSelection()).split(':')[0]]
+        self.__start_date = self.sd_date_picker.GetValue().Format('%Y%m%d')
+        self.__end_date = self.ed_date_picker.GetValue().Format('%Y%m%d')
+        if self.__start_date > self.__end_date:
             wx.MessageBox('开始日期不能大于结束日期！')
             return
         self.EndModal(wx.ID_OK)
@@ -435,7 +444,8 @@ class FesRootFrame(RootFrame):
         dlg = FesB9999Dialog(self)
         if dlg.ShowModal() == wx.ID_OK:
             self.status_bar.SetStatusText('正在后台下载过渡户交易明细文件...', 1)
-            B9999Thread(dlg.account_dict[dlg.choose_num], dlg.start_date, dlg.end_date)
+            ba, sd, ed = dlg.get_selection()
+            B9999Thread(ba, sd, ed)
         dlg.Destroy()
 
     def on_mib2306(self, event):
