@@ -141,7 +141,8 @@ class FesRootFrame(RootFrame):
             2: ('6', 'GHIMAC'),
             3: ('8', 'GHAPP'),
             4: ('5', 'ZHPOS'),
-            5: ('8', 'CCBAPP')
+            5: ('5', 'CCBPOS'),
+            6: ('8', 'CCBAPP')
         }
         self.total_amt = 0.0
         self.tran_date = self.trans_date_picker.GetValue().Format('%Y%m%d')

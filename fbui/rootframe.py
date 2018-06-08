@@ -47,7 +47,7 @@ class RootFrame(wx.Frame):
         self.trans_choice_text.Wrap(-1)
         config_sizer.Add(self.trans_choice_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        trans_choiceChoices = [u"未选择", u"工商银行大厅POS", u"工商银行一体机IMAC", u"工商银行APP", u"招商银行大厅POS", u"建设银行APP"]
+        trans_choiceChoices = [u"未选择", u"工商银行大厅POS", u"工商银行一体机IMAC", u"工商银行APP", u"招商银行大厅POS", u"建设银行大厅POS", u"建设银行APP"]
         self.trans_choice = wx.Choice(config_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
                                       trans_choiceChoices, 0)
         self.trans_choice.SetSelection(0)
