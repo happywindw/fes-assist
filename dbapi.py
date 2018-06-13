@@ -183,6 +183,62 @@ class DataBaseApi(object):
             self.et.show_exception(e)
             return []
 
+    def get_write_back_list(self, set_date, file_type):
+        try:
+            res = self.session.execute("select t.ctrast_no 对账关联号,t.bank_code 银行码,u.itemval 银行名称,"
+                                       "t.aae036 入库时间,t.tran_date 报盘给银行时间,t.hp_date 回盘时间, "
+                                       "decode(t.bankstatus,'2','成功','3','失败') 扣款结果,count(1) 笔数,sum(t.total_amt)"
+                                       " 金额 from fes_sumbusi_detail t left join sys_dict_item u on "
+                                       "t.bank_code=u.itemkey and u.dict='bank_code' where t.res_busi_seq in "
+                                       "(select t.file_name from fes_file_log t where t.request_type='2' and "
+                                       "t.set_date='%s' and t.file_type='%s') group by t.ctrast_no,t.bank_code,"
+                                       "u.itemval,t.aae036,t.tran_date,t.hp_date,t.bankstatus "
+                                       "order by t.bank_code,t.bankstatus" % (set_date, file_type))
+            return res.fetchall()
+        except Exception as e:
+            print(e)
+
+    def get_write_failed_c(self, tran_date):
+        try:
+            set_date = tran_date[:-2] + '%'
+            res = self.session.execute("select t.ctrast_no 对账关联号,t.bank_code 银行码,u.itemval 银行名称,"
+                                       "decode(t.writeback_status,'W1','未回写','W2','已回写') 回写状态,"
+                                       "t.bankstatus 交易状态码,v.itemval 交易状态,count(1) 笔数,sum(t.total_amt) 金额,"
+                                       "t.tran_date 报盘给银行时间 from fes_sumbusi_detail t  left join sys_dict_item u "
+                                       "on t.bank_code=u.itemkey and u.dict='bank_code' left join sys_dict_item v on "
+                                       "t.bankstatus=v.itemkey and v.dict='bankstatus' where t.req_busi_seq in "
+                                       "(select t.file_name from fes_file_log t where t.set_date like '%s' and "
+                                       "t.tran_date!='%s' and t.file_type='C' and t.request_type='1') and "
+                                       "t.writeback_status='W1' and t.bankstatus not in ('13','16') and "
+                                       "t.bankstatus<>'0' group by t.ctrast_no,t.bank_code,u.itemval,t.writeback_status,"
+                                       "t.bankstatus,t.tran_date,v.itemval order by t.ctrast_no,t.bank_code,u.itemval,"
+                                       "t.writeback_status,t.bankstatus" % (set_date, tran_date))
+            return res.fetchall()
+        except Exception as e:
+            print(e)
+
+    def get_write_failed_d(self, tran_date):
+        try:
+            set_date = tran_date[:-2] + '%'
+            res = self.session.execute("select t.ctrast_no 对账关联号,u.itemval 银行名称,t.bank_code 银行码,"
+                                       "t.yad050_in 收款银行码,t.yad050_out 付款银行码,t.aae036 入库时间,"
+                                       "t.check_datetime 审批时间,t.tran_date 报盘给银行时间,t.hp_date 回盘时间,"
+                                       "decode(t.writeback_status,'W1','未回写','W2','已回写') 回写状态,"
+                                       "v.itemval 交易状态,count(1) 笔数,sum(t.total_amt) 金额 from fes_sumbusi_detail t "
+                                       "left join sys_dict_item u on t.bank_code=u.itemkey and u.dict='bank_code' left "
+                                       "join sys_dict_item v on t.bankstatus=v.itemkey and v.dict='bankstatus' where "
+                                       "t.req_busi_seq in (select t.file_name from fes_file_log t where t.set_date "
+                                       "like '%s' and t.file_type='D' and t.request_type='1') and "
+                                       "t.writeback_status='W1' and t.bankstatus not in ('13','16') and "
+                                       "t.bankstatus<>'0' and t.tran_date<>'%s' group by t.ctrast_no,u.itemval,"
+                                       "t.writeback_status,v.itemval,t.bank_code,t.yad050_in,t.yad050_out,t.aae036,"
+                                       "t.check_datetime,t.tran_date,t.hp_date order by t.ctrast_no,t.check_datetime,"
+                                       "t.tran_date,t.hp_date,u.itemval,t.bank_code,t.writeback_status,t.aae036;" %
+                                       (set_date, tran_date))
+            return res.fetchall()
+        except Exception as e:
+            print(e)
+
     def execute_sql(self, sql):
         return self.session.execute(sql).fetchall()
 

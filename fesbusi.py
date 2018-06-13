@@ -145,3 +145,6 @@ class FesBusi(object):
         f9 = FesB9999(ba, sd, ed)
         f9.post()
         return f9.download_file()
+
+    def generate_daily(self):
+        pass
