@@ -239,6 +239,20 @@ class DataBaseApi(object):
         except Exception as e:
             print(e)
 
+    def get_send_bank(self, tran_date):
+        try:
+            res = self.session.execute("select t.batch_no 报银行批次号,u.itemval  ,decode(t.is_entrust,'1','委托',"
+                                       "'非委托') 是否委托, decode(t.is_cbs,'1','CBS代扣','非CBS代扣')是否CBS代扣,"
+                                       "decode(t.file_type,'C','代收','代发') 收付类型,t.tran_date 报盘日期,"
+                                       "t.tran_time 报盘时间, decode(t.batch_status,'11','报盘成功','12','回盘成功','13',"
+                                       "'报盘失败') 批次状态,t.total_amt 总金额,t.total_num 总笔数,t.usage 用途 from "
+                                       "fes_sendbankfile_log t left join sys_dict_item u on t.bank_code=u.itemkey and "
+                                       "u.dict='bank_code' where t.tran_date='%s' order by t.file_type,"
+                                       "t.tran_date,t.tran_time,t.batch_no;" % tran_date)
+            return res.fetchall()
+        except Exception as e:
+            print(e)
+
     def execute_sql(self, sql):
         return self.session.execute(sql).fetchall()
 
