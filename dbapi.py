@@ -253,6 +253,38 @@ class DataBaseApi(object):
         except Exception as e:
             print(e)
 
+    def get_online_detail(self, tran_date_list):
+        try:
+            if len(tran_date_list) == 1:
+                tran_str = '=' + tran_date_list[0]
+            else:
+                tran_str = 'in ('
+                for td in tran_date_list:
+                    tran_str += td + ','
+                    pass
+                tran_str = tran_str[:-1] + ')'
+            res = self.session.execute("select decode(t.org_nick_name,'CCBAPP','建行APP','CCBPOS','建行POS','GHAPP',"
+                                       "'工行APP','GHIMAC','工行一体机','GHPOS','工行POS','ZHPOS','招行POS') 联机类型,"
+                                       "t.tran_date 交易日期,decode(t.is_check,'1','正常','0','单边')是否单边业务,"
+                                       "count(1) 笔数,sum(t.total_amt) 金额 from fes_online_detail t where "
+                                       "t.tran_date'%s' and t.org_nick_name is not null group by "
+                                       "t.org_nick_name,t.tran_date,t.is_check order by t.org_nick_name;" % tran_str)
+            return res.fetchall()
+        except Exception as e:
+            print(e)
+
+    def get_e2e_detail(self, tran_date):
+        try:
+            res = self.session.execute("select t.yad107 业务批次号,t.aae036 提交FES时间,t.check_datetime 审批时间,"
+                                       "t.tran_date 报盘给银行时间,decode(t.bankstatus,'2','成功','3','失败','其他') "
+                                       "转账状态,count(1) 笔数,sum(t.total_amt) 金额 from fes_e2e_detail t where "
+                                       "t.tran_date='%s' group by t.yad107,t.aae036,t.check_datetime,t.tran_date,"
+                                       "t.bankstatus order by t.yad107,t.aae036,t.check_datetime,t.tran_date,"
+                                       "t.bankstatus" % tran_date)
+            return res.fetchall()
+        except Exception as e:
+            print(e)
+
     def execute_sql(self, sql):
         return self.session.execute(sql).fetchall()
 
