@@ -6,6 +6,7 @@ from wx.lib.pubsub import pub
 
 from fbui.aae076dialog import Aae076Dialog
 from fbui.b9999dialog import B9999Dialog
+from fbui.dailydialog import DailyDialog
 from fbui.delchkdialog import DelChkDialog
 from fbui.rootframe import RootFrame
 from fesbusi import FesBusi
@@ -111,6 +112,15 @@ class FesAae076Dialog(Aae076Dialog):
                 wx.MessageBox('删除异常：%s' % result[0][1])
         else:
             md.Destroy()
+
+
+class FesDailyDialog(DailyDialog):
+    def __init__(self, parent):
+        super().__init__(parent)
+        pass
+
+    def on_ok(self, event):
+        event.Skip()
 
 
 class FesRootFrame(RootFrame):
