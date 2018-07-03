@@ -65,10 +65,16 @@ def get_remote_serve_time(ser_name):
     ssh = paramiko.SSHClient()
     key = paramiko.AutoAddPolicy()
     ssh.set_missing_host_key_policy(key)
-    ssh.connect(SERVER_DICT[ser_name]['host'], SERVER_DICT[ser_name]['port'], SERVER_DICT[ser_name]['user'],
-                SERVER_DICT[ser_name]['pw'], timeout=10)
-    stdin, stdout, stderr = ssh.exec_command('date "+%Y年%m月%d日 %H:%M:%S"')
-    return stdout.readlines()[0]
+    try:
+        ssh.connect(SERVER_DICT[ser_name]['host'], SERVER_DICT[ser_name]['port'], SERVER_DICT[ser_name]['user'],
+                    SERVER_DICT[ser_name]['pw'], timeout=10)
+        stdin, stdout, stderr = ssh.exec_command('date "+%Y年%m月%d日 %H:%M:%S"')
+        res = stdout.readlines()[0]
+    except Exception as e:
+        logger.error('Get server time exception: %s' % e)
+        res = '获取服务器时间失败：%s' % e
+    ssh.close()
+    return res
 
 
 def modify_remote_server_time(ser_name, new_date=None, new_time=None):
@@ -77,15 +83,19 @@ def modify_remote_server_time(ser_name, new_date=None, new_time=None):
     ssh = paramiko.SSHClient()
     key = paramiko.AutoAddPolicy()
     ssh.set_missing_host_key_policy(key)
-    ssh.connect(SERVER_DICT[ser_name]['host'], SERVER_DICT[ser_name]['port'], SERVER_DICT[ser_name]['user'],
-                SERVER_DICT[ser_name]['pw'], timeout=10)
     res = []
-    if new_date:
-        stdin, stdout, stderr = ssh.exec_command('date -s %s' % new_date)
-        res.append(stdout.readlines()[0])
-    if new_time:
-        stdin, stdout, stderr = ssh.exec_command('date -s %s' % new_time)
-        res.append(stdout.readlines()[0])
+    try:
+        ssh.connect(SERVER_DICT[ser_name]['host'], SERVER_DICT[ser_name]['port'], SERVER_DICT[ser_name]['user'],
+                    SERVER_DICT[ser_name]['pw'], timeout=10)
+        if new_date:
+            stdin, stdout, stderr = ssh.exec_command('date -s %s' % new_date)
+            res.append(stdout.readlines()[0])
+        if new_time:
+            stdin, stdout, stderr = ssh.exec_command('date -s %s' % new_time)
+            res.append(stdout.readlines()[0])
+    except Exception as e:
+        logger.error('Set server time exception: %s' % e)
+        res.append('发生错误：%s' % e)
     ssh.close()
     return res
 

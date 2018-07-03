@@ -9,11 +9,12 @@ from fbui.b9999dialog import B9999Dialog
 from fbui.dailydialog import DailyDialog
 from fbui.delchkdialog import DelChkDialog
 from fbui.rootframe import RootFrame
+from fbui.timedialog import TimeDialog
 from fesbusi import FesBusi
 from feslogs import logger
 from settings import TRANS_ACCOUNT
 from uithreads import ExceptionThread, B9999Thread
-from utils import insert_into_gird
+from utils import insert_into_gird, get_remote_serve_time, modify_remote_server_time
 
 
 class FesDelChkDialog(DelChkDialog):
@@ -112,6 +113,23 @@ class FesAae076Dialog(Aae076Dialog):
                 wx.MessageBox('删除异常：%s' % result[0][1])
         else:
             md.Destroy()
+
+
+class FesTimeDialog(TimeDialog):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+    def on_choose_server(self, event):
+        self.time_text.SetLabel(get_remote_serve_time('pro_v2'))
+
+    def on_get_local(self, event):
+        event.Skip()
+
+    def on_modify_time(self, event):
+        event.Skip()
+
+    def on_cancel(self, event):
+        self.EndModal(wx.ID_CANCEL)
 
 
 class FesDailyDialog(DailyDialog):
@@ -480,7 +498,9 @@ class FesRootFrame(RootFrame):
         event.Skip()
 
     def on_show_time_dialog(self, event):
-        event.Skip()
+        dlg = FesTimeDialog(self)
+        dlg.ShowModal()
+        dlg.Destroy()
 
     def on_open_log(self, event):
         log_file = ('%s/logs/%s_fes_assist_log.txt' %
