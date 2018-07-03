@@ -2,7 +2,7 @@
 import winreg
 import paramiko
 from feslogs import logger
-from settings import sftp_ser
+from settings import sftp_ser, SERVER_DICT
 
 
 def insert_into_gird(grid, data, row_labels=None, col_labels=None):
@@ -59,6 +59,35 @@ def sftp_download(remote, local):
         msg = (False, '下载失败：%s' % e)
     sf.close()
     return msg
+
+
+def get_remote_serve_time(ser_name):
+    ssh = paramiko.SSHClient()
+    key = paramiko.AutoAddPolicy()
+    ssh.set_missing_host_key_policy(key)
+    ssh.connect(SERVER_DICT[ser_name]['host'], SERVER_DICT[ser_name]['port'], SERVER_DICT[ser_name]['user'],
+                SERVER_DICT[ser_name]['pw'], timeout=10)
+    stdin, stdout, stderr = ssh.exec_command('date "+%Y年%m月%d日 %H:%M:%S"')
+    return stdout.readlines()[0]
+
+
+def modify_remote_server_time(ser_name, new_date=None, new_time=None):
+    if new_date is None and new_time is None:
+        return
+    ssh = paramiko.SSHClient()
+    key = paramiko.AutoAddPolicy()
+    ssh.set_missing_host_key_policy(key)
+    ssh.connect(SERVER_DICT[ser_name]['host'], SERVER_DICT[ser_name]['port'], SERVER_DICT[ser_name]['user'],
+                SERVER_DICT[ser_name]['pw'], timeout=10)
+    res = []
+    if new_date:
+        stdin, stdout, stderr = ssh.exec_command('date -s %s' % new_date)
+        res.append(stdout.readlines()[0])
+    if new_time:
+        stdin, stdout, stderr = ssh.exec_command('date -s %s' % new_time)
+        res.append(stdout.readlines()[0])
+    ssh.close()
+    return res
 
 
 def get_desktop():

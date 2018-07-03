@@ -292,7 +292,7 @@ class RootFrame(wx.Frame):
                                        wx.ITEM_NORMAL)
         self.menu_opa.Append(self.mi_re_check)
 
-        self.mi_daily = wx.MenuItem(self.menu_opa, wx.ID_ANY, u"MyMenuItem", wx.EmptyString, wx.ITEM_NORMAL)
+        self.mi_daily = wx.MenuItem(self.menu_opa, wx.ID_ANY, u"生成日报...", u"生成指定日期的日报文件", wx.ITEM_NORMAL)
         self.menu_opa.Append(self.mi_daily)
 
         self.menu_bar.Append(self.menu_opa, u"操作")
@@ -384,6 +384,377 @@ class RootFrame(wx.Frame):
         event.Skip()
 
     def on_reconnect(self, event):
+        event.Skip()
+
+
+###########################################################################
+## Class Aae076Dialog
+###########################################################################
+
+class Aae076Dialog(wx.Dialog):
+
+    def __init__(self, parent):
+        wx.Dialog.__init__(self, parent, id=wx.ID_ANY, title=u"对账文件笔数和更新笔数不一致!", pos=wx.DefaultPosition,
+                           size=wx.Size(750, 450), style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
+
+        self.SetSizeHints(wx.Size(-1, -1), wx.DefaultSize)
+
+        ad_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        self.info_panel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(-1, -1), wx.TAB_TRAVERSAL)
+        self.info_panel.SetMaxSize(wx.Size(-1, 60))
+
+        info_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.info_text = wx.StaticText(self.info_panel, wx.ID_ANY, u"info", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.info_text.Wrap(-1)
+        self.info_text.SetFont(wx.Font(14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑"))
+        self.info_text.SetForegroundColour(wx.Colour(255, 0, 0))
+
+        info_sizer.Add(self.info_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.refresh_button = wx.Button(self.info_panel, wx.ID_ANY, u"刷新", wx.DefaultPosition, wx.DefaultSize, 0)
+        info_sizer.Add(self.refresh_button, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.info_panel.SetSizer(info_sizer)
+        self.info_panel.Layout()
+        info_sizer.Fit(self.info_panel)
+        ad_sizer.Add(self.info_panel, 1, wx.EXPAND | wx.ALL, 5)
+
+        self.gird_panel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
+        gird_sizer = wx.StaticBoxSizer(wx.StaticBox(self.gird_panel, wx.ID_ANY, u"详情"), wx.VERTICAL)
+
+        self.aae076_text = wx.StaticText(gird_sizer.GetStaticBox(), wx.ID_ANY, u"双击行号查看详情", wx.DefaultPosition,
+                                         wx.DefaultSize, 0)
+        self.aae076_text.Wrap(-1)
+        gird_sizer.Add(self.aae076_text, 0, wx.ALL, 5)
+
+        self.aae076_grid = wx.grid.Grid(gird_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
+
+        # Grid
+        self.aae076_grid.CreateGrid(1, 3)
+        self.aae076_grid.EnableEditing(True)
+        self.aae076_grid.EnableGridLines(True)
+        self.aae076_grid.EnableDragGridSize(False)
+        self.aae076_grid.SetMargins(0, 0)
+
+        # Columns
+        self.aae076_grid.EnableDragColMove(False)
+        self.aae076_grid.EnableDragColSize(True)
+        self.aae076_grid.SetColLabelSize(30)
+        self.aae076_grid.SetColLabelValue(0, u"ORG_NICK_NAME")
+        self.aae076_grid.SetColLabelValue(1, u"AAE076")
+        self.aae076_grid.SetColLabelValue(2, u"COUNT")
+        self.aae076_grid.SetColLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
+
+        # Rows
+        self.aae076_grid.EnableDragRowSize(True)
+        self.aae076_grid.SetRowLabelSize(80)
+        self.aae076_grid.SetRowLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
+
+        # Label Appearance
+
+        # Cell Defaults
+        self.aae076_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
+        gird_sizer.Add(self.aae076_grid, 0, wx.ALL, 5)
+
+        self.detail_text = wx.StaticText(gird_sizer.GetStaticBox(), wx.ID_ANY, u"双击行号删除记录", wx.DefaultPosition,
+                                         wx.DefaultSize, 0)
+        self.detail_text.Wrap(-1)
+        gird_sizer.Add(self.detail_text, 0, wx.ALL, 5)
+
+        self.detail_grid = wx.grid.Grid(gird_sizer.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
+
+        # Grid
+        self.detail_grid.CreateGrid(1, 5)
+        self.detail_grid.EnableEditing(True)
+        self.detail_grid.EnableGridLines(True)
+        self.detail_grid.EnableDragGridSize(False)
+        self.detail_grid.SetMargins(0, 0)
+
+        # Columns
+        self.detail_grid.EnableDragColMove(False)
+        self.detail_grid.EnableDragColSize(True)
+        self.detail_grid.SetColLabelSize(30)
+        self.detail_grid.SetColLabelValue(0, u"AAE076")
+        self.detail_grid.SetColLabelValue(1, u"TRANS_STATUS")
+        self.detail_grid.SetColLabelValue(2, u"FUND_STATUS")
+        self.detail_grid.SetColLabelValue(3, u"ID")
+        self.detail_grid.SetColLabelValue(4, u"TOTAL_AMT")
+        self.detail_grid.SetColLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
+
+        # Rows
+        self.detail_grid.EnableDragRowSize(True)
+        self.detail_grid.SetRowLabelSize(80)
+        self.detail_grid.SetRowLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
+
+        # Label Appearance
+
+        # Cell Defaults
+        self.detail_grid.SetDefaultCellAlignment(wx.ALIGN_LEFT, wx.ALIGN_TOP)
+        gird_sizer.Add(self.detail_grid, 0, wx.ALL, 5)
+
+        self.gird_panel.SetSizer(gird_sizer)
+        self.gird_panel.Layout()
+        gird_sizer.Fit(self.gird_panel)
+        ad_sizer.Add(self.gird_panel, 1, wx.EXPAND | wx.ALL, 5)
+
+        self.SetSizer(ad_sizer)
+        self.Layout()
+
+        self.Centre(wx.BOTH)
+
+        # Connect Events
+        self.refresh_button.Bind(wx.EVT_BUTTON, self.on_get_repeat_aae076)
+        self.aae076_grid.Bind(wx.grid.EVT_GRID_LABEL_LEFT_DCLICK, self.on_show_details)
+        self.detail_grid.Bind(wx.grid.EVT_GRID_LABEL_LEFT_DCLICK, self.on_delete_row)
+
+    def __del__(self):
+        pass
+
+    # Virtual event handlers, overide them in your derived class
+    def on_get_repeat_aae076(self, event):
+        event.Skip()
+
+    def on_show_details(self, event):
+        event.Skip()
+
+    def on_delete_row(self, event):
+        event.Skip()
+
+
+###########################################################################
+## Class DelChkDialog
+###########################################################################
+
+class DelChkDialog(wx.Dialog):
+
+    def __init__(self, parent):
+        wx.Dialog.__init__(self, parent, id=wx.ID_ANY, title=u"删除对账信息", pos=wx.DefaultPosition, size=wx.DefaultSize,
+                           style=wx.DEFAULT_DIALOG_STYLE)
+
+        self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
+
+        del_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        self.warning_text = wx.StaticText(self, wx.ID_ANY, u"删除某日的对账信息，以便进行重新对账，请谨慎操作！", wx.DefaultPosition,
+                                          wx.DefaultSize, 0)
+        self.warning_text.Wrap(-1)
+        self.warning_text.SetFont(
+            wx.Font(14, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "宋体"))
+        self.warning_text.SetForegroundColour(wx.Colour(255, 0, 0))
+
+        del_sizer.Add(self.warning_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        p_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.choose_text = wx.StaticText(self, wx.ID_ANY, u"选择要删除的日期：", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.choose_text.Wrap(-1)
+        p_sizer.Add(self.choose_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.date_picker = wx.adv.DatePickerCtrl(self, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition,
+                                                 wx.DefaultSize, wx.adv.DP_DROPDOWN)
+        p_sizer.Add(self.date_picker, 0, wx.ALL, 5)
+
+        del_sizer.Add(p_sizer, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.SHAPED, 5)
+
+        b_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.ok_button = wx.Button(self, wx.ID_OK, u"确定", wx.DefaultPosition, wx.DefaultSize, 0)
+        b_sizer.Add(self.ok_button, 0, wx.ALL, 5)
+
+        self.cancel_button = wx.Button(self, wx.ID_CANCEL, u"取消", wx.DefaultPosition, wx.DefaultSize, 0)
+        b_sizer.Add(self.cancel_button, 0, wx.ALL, 5)
+
+        del_sizer.Add(b_sizer, 1, wx.ALIGN_CENTER | wx.EXPAND | wx.SHAPED, 5)
+
+        self.SetSizer(del_sizer)
+        self.Layout()
+        del_sizer.Fit(self)
+
+        self.Centre(wx.BOTH)
+
+        # Connect Events
+        self.ok_button.Bind(wx.EVT_BUTTON, self.on_ok)
+        self.cancel_button.Bind(wx.EVT_BUTTON, self.on_cancel)
+
+    def __del__(self):
+        pass
+
+    # Virtual event handlers, overide them in your derived class
+    def on_ok(self, event):
+        event.Skip()
+
+    def on_cancel(self, event):
+        event.Skip()
+
+
+###########################################################################
+## Class B9999Dialog
+###########################################################################
+
+class B9999Dialog(wx.Dialog):
+
+    def __init__(self, parent):
+        wx.Dialog.__init__(self, parent, id=wx.ID_ANY, title=u"下载过渡户交易明细文件(发送B9999请求)：", pos=wx.DefaultPosition,
+                           size=wx.DefaultSize, style=wx.DEFAULT_DIALOG_STYLE)
+
+        self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
+
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        bank_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.bank_text = wx.StaticText(self, wx.ID_ANY, u"选择银行过渡户:", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.bank_text.Wrap(-1)
+        bank_sizer.Add(self.bank_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        bank_choiceChoices = []
+        self.bank_choice = wx.Choice(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, bank_choiceChoices, 0)
+        self.bank_choice.SetSelection(0)
+        self.bank_choice.SetMinSize(wx.Size(280, -1))
+
+        bank_sizer.Add(self.bank_choice, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        main_sizer.Add(bank_sizer, 1, wx.EXPAND, 5)
+
+        sd_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.sd_text = wx.StaticText(self, wx.ID_ANY, u"选择开始日期： ", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.sd_text.Wrap(-1)
+        sd_sizer.Add(self.sd_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.sd_date_picker = wx.adv.DatePickerCtrl(self, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition,
+                                                    wx.DefaultSize, wx.adv.DP_DROPDOWN)
+        sd_sizer.Add(self.sd_date_picker, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        main_sizer.Add(sd_sizer, 1, wx.EXPAND, 5)
+
+        ed_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.ed_text = wx.StaticText(self, wx.ID_ANY, u"选择结束日期： ", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.ed_text.Wrap(-1)
+        ed_sizer.Add(self.ed_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.ed_date_picker = wx.adv.DatePickerCtrl(self, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition,
+                                                    wx.DefaultSize, wx.adv.DP_DROPDOWN)
+        ed_sizer.Add(self.ed_date_picker, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        main_sizer.Add(ed_sizer, 1, wx.EXPAND, 5)
+
+        btn_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        bi_sizer = wx.GridSizer(1, 2, 0, 0)
+
+        self.btn_ok = wx.Button(self, wx.ID_ANY, u"确定", wx.DefaultPosition, wx.DefaultSize, 0)
+        bi_sizer.Add(self.btn_ok, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.btn_cancel = wx.Button(self, wx.ID_ANY, u"取消", wx.DefaultPosition, wx.DefaultSize, 0)
+        bi_sizer.Add(self.btn_cancel, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        btn_sizer.Add(bi_sizer, 1, wx.ALIGN_CENTER | wx.EXPAND, 5)
+
+        main_sizer.Add(btn_sizer, 1, wx.EXPAND, 5)
+
+        self.SetSizer(main_sizer)
+        self.Layout()
+        main_sizer.Fit(self)
+
+        self.Centre(wx.BOTH)
+
+        # Connect Events
+        self.btn_ok.Bind(wx.EVT_BUTTON, self.on_ok)
+        self.btn_cancel.Bind(wx.EVT_BUTTON, self.on_cancel)
+
+    def __del__(self):
+        pass
+
+    # Virtual event handlers, overide them in your derived class
+    def on_ok(self, event):
+        event.Skip()
+
+    def on_cancel(self, event):
+        event.Skip()
+
+
+###########################################################################
+## Class DailyDialog
+###########################################################################
+
+class DailyDialog(wx.Dialog):
+
+    def __init__(self, parent):
+        wx.Dialog.__init__(self, parent, id=wx.ID_ANY, title=u"生成日报文件", pos=wx.DefaultPosition, size=wx.DefaultSize,
+                           style=wx.DEFAULT_DIALOG_STYLE)
+
+        self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
+
+        daily_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        self.title_text = wx.StaticText(self, wx.ID_ANY, u"三版FES运营日报", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.title_text.Wrap(-1)
+        daily_sizer.Add(self.title_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        r_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.report_d_text = wx.StaticText(self, wx.ID_ANY, u"填报日期：", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.report_d_text.Wrap(-1)
+        r_sizer.Add(self.report_d_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.rd_date_picker = wx.adv.DatePickerCtrl(self, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition,
+                                                    wx.DefaultSize, wx.adv.DP_DEFAULT)
+        r_sizer.Add(self.rd_date_picker, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.report_p_text = wx.StaticText(self, wx.ID_ANY, u"填报人", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.report_p_text.Wrap(-1)
+        r_sizer.Add(self.report_p_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.rp_text_ctrl = wx.TextCtrl(self, wx.ID_ANY, u"杨飞", wx.DefaultPosition, wx.DefaultSize, 0)
+        r_sizer.Add(self.rp_text_ctrl, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        daily_sizer.Add(r_sizer, 1, wx.EXPAND, 5)
+
+        self.o_text = wx.StaticText(self, wx.ID_ANY, u"联机业务起止日期：", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.o_text.Wrap(-1)
+        daily_sizer.Add(self.o_text, 0, wx.ALL, 5)
+
+        o_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.start_text = wx.StaticText(self, wx.ID_ANY, u"开始日期：", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.start_text.Wrap(-1)
+        o_sizer.Add(self.start_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.m_datePicker6 = wx.adv.DatePickerCtrl(self, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition,
+                                                   wx.DefaultSize, wx.adv.DP_DEFAULT)
+        o_sizer.Add(self.m_datePicker6, 0, wx.ALL, 5)
+
+        self.end_text = wx.StaticText(self, wx.ID_ANY, u"结束日期：", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.end_text.Wrap(-1)
+        o_sizer.Add(self.end_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.m_datePicker7 = wx.adv.DatePickerCtrl(self, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition,
+                                                   wx.DefaultSize, wx.adv.DP_DEFAULT)
+        o_sizer.Add(self.m_datePicker7, 0, wx.ALL, 5)
+
+        daily_sizer.Add(o_sizer, 1, wx.EXPAND, 5)
+
+        self.ok_btn = wx.Button(self, wx.ID_ANY, u"OK", wx.DefaultPosition, wx.DefaultSize, 0)
+        daily_sizer.Add(self.ok_btn, 0, wx.ALIGN_CENTER | wx.ALL, 5)
+
+        self.SetSizer(daily_sizer)
+        self.Layout()
+        daily_sizer.Fit(self)
+
+        self.Centre(wx.BOTH)
+
+        # Connect Events
+        self.ok_btn.Bind(wx.EVT_BUTTON, self.on_ok)
+
+    def __del__(self):
+        pass
+
+    # Virtual event handlers, overide them in your derived class
+    def on_ok(self, event):
         event.Skip()
 
 
