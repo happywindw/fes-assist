@@ -31,7 +31,7 @@ class TimeDialog(wx.Dialog):
         self.choose_text.Wrap(-1)
         time_sizer.Add(self.choose_text, 0, wx.ALIGN_CENTER | wx.ALL, 5)
 
-        ser_choiceChoices = [wx.EmptyString, u"二版生产服务器"]
+        ser_choiceChoices = [wx.EmptyString, u"二版生产：10.200.24.46", u"二版测试：10.200.24.47", u"三版生产：10.200.24.119"]
         self.ser_choice = wx.Choice(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, ser_choiceChoices, 0)
         self.ser_choice.SetSelection(0)
         time_sizer.Add(self.ser_choice, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
@@ -156,7 +156,7 @@ class TimeDialog(wx.Dialog):
         self.bk_text_04.Wrap(-1)
         btn_sizer.Add(self.bk_text_04, 0, wx.ALL, 5)
 
-        self.cancel_btn = wx.Button(self, wx.ID_ANY, u"取消", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.cancel_btn = wx.Button(self, wx.ID_ANY, u"关闭", wx.DefaultPosition, wx.DefaultSize, 0)
         btn_sizer.Add(self.cancel_btn, 0, wx.ALL, 5)
 
         time_sizer.Add(btn_sizer, 1, wx.EXPAND, 5)

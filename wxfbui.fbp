@@ -6309,7 +6309,7 @@
                         <property name="caption"></property>
                         <property name="caption_visible">1</property>
                         <property name="center_pane">0</property>
-                        <property name="choices">&quot;&quot; &quot;二版生产服务器&quot;</property>
+                        <property name="choices">&quot;&quot; &quot;二版生产：10.200.24.46&quot; &quot;二版测试：10.200.24.47&quot; &quot;三版生产：10.200.24.119&quot;</property>
                         <property name="close_button">1</property>
                         <property name="context_help"></property>
                         <property name="context_menu">1</property>
@@ -8397,7 +8397,7 @@
                                 <property name="gripper">0</property>
                                 <property name="hidden">0</property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">取消</property>
+                                <property name="label">关闭</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>

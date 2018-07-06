@@ -120,13 +120,50 @@ class FesTimeDialog(TimeDialog):
         super().__init__(parent)
 
     def on_choose_server(self, event):
-        self.time_text.SetLabel(get_remote_serve_time('pro_v2'))
+        ser = self.ser_choice.GetString(self.ser_choice.GetCurrentSelection())
+        self.time_text.SetLabel(get_remote_serve_time(ser))
 
     def on_get_local(self, event):
-        event.Skip()
+        btn = event.GetEventObject()
+        now = datetime.datetime.now()
+        if btn is self.local_date_btn:
+            for i, item in enumerate(self.year_choice.GetItems()):
+                if item == str(now.year):
+                    self.year_choice.SetSelection(i)
+                    break
+            self.month_choice.SetSelection(now.month)
+            self.day_choice.SetSelection(now.day)
+        else:
+            self.hour_choice.SetSelection(now.hour + 1)
+            self.minute_choice.SetSelection(now.minute + 1)
+            self.second_choice.SetSelection(now.second + 1)
 
     def on_modify_time(self, event):
-        event.Skip()
+        ser = self.ser_choice.GetString(self.ser_choice.GetCurrentSelection())
+        if not ser:
+            wx.MessageBox('请先选择一个远程服务器！')
+            return
+
+        year = self.year_choice.GetString(self.year_choice.GetCurrentSelection())
+        month = self.month_choice.GetString(self.month_choice.GetCurrentSelection())
+        day = self.day_choice.GetString(self.day_choice.GetCurrentSelection())
+
+        hour = self.hour_choice.GetString(self.hour_choice.GetCurrentSelection())
+        minute = self.minute_choice.GetString(self.minute_choice.GetCurrentSelection())
+        second = self.second_choice.GetString(self.second_choice.GetCurrentSelection())
+
+        new_date = new_time = ''
+        if year and month and day:
+            new_date = '/'.join([str(year), str(month), str(day)])
+        if hour and minute and second:
+            new_time = ':'.join([str(hour), str(minute), str(second)])
+
+        if not new_date and not new_time:
+            wx.MessageBox('时间信息不完整！')
+            return
+        else:
+            res = modify_remote_server_time(ser, new_date=new_date, new_time=new_time)
+            wx.MessageBox(str(res))
 
     def on_cancel(self, event):
         self.EndModal(wx.ID_CANCEL)
